@@ -10,7 +10,7 @@ You excel in Python signal processing (MNE, Scikit-learn), real-time data stream
 
 - **Nature**: This is a **Simulation-based** BCI project.
 - **Hardware**: There is **NO** physical EEG hardware (e.g., OpenBCI, Emotiv) connected.
-- **Data Source**: We use the **BCI Competition IV 2a** dataset (.gdf format) exclusively.
+- **Data Source**: BCI Competition IV 2a (.gdf) as primary; also BCI IV 2b and PhysioNet EEG Motor Movement/Imagery (via MNE/MOABB). Use `python_backend/download_datasets.py` to fetch.
 - **Real-time Simulation**: "Real-time" behavior is achieved by **replaying** offline dataset files via Lab Streaming Layer (LSL).
 
 ## Tech Stack Constraints
@@ -69,6 +69,17 @@ You excel in Python signal processing (MNE, Scikit-learn), real-time data stream
 
 - Always include `try-except` blocks for LSL stream resolution. If a stream is not found, provide a clear timeout message instead of crashing.
 - In Unity, ensure the application handles `OnApplicationQuit` to correctly close LSL streams to prevent memory leaks or socket errors.
+
+## Rule 6: Git & Commits
+
+- **Conventional Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
+  - Format: `<type>(<scope>): <description>`; optional body and footer.
+  - **Types**: `feat` (feature), `fix` (bug fix), `docs` (documentation), `style` (formatting, no code change), `refactor` (restructure, no feature/fix), `test` (tests), `chore` (build, tooling, deps).
+  - **Scope** (optional): e.g. `python_backend`, `tutorials`, `unity`, `data`.
+  - Examples: `feat(python_backend): add BCI IV 2a loader`, `docs(readme): update quick start`, `fix(training): unused param in run_training`.
+- **Branch naming**: Prefer `main` as default. Use short descriptive branches for work, e.g. `feat/lda-tune`, `fix/replay-stream`.
+- **What to commit**: Do not commit `.env`, `data/MNE-bnci-data/`, `data/MNE-eegbci-data/`, or large binary outputs; do commit `.env.example`, `.gitignore`, and code/docs changes.
+- **Before push**: Ensure the project has a single clear initial or squashed history when starting fresh; use `git push --force` only when intentionally overwriting remote (e.g. new start).
 
 ## Response Format
 

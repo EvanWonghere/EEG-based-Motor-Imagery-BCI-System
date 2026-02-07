@@ -89,6 +89,8 @@ Main variables:
 
 Scripts that use MNE or project data load `.env` via `python-dotenv` when run from the project root. Do not commit `.env` (it is in `.gitignore`).
 
+**Git**: Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat(scope): description`, `docs: ...`, `fix: ...`). See `.cursorrules` (Rule 6) for details.
+
 ## 🚀 Quick Start
 
 1. Create and activate the **thesis** conda env: `conda env create -f environment.yml` then `conda activate thesis`. (If the env already exists: `conda activate thesis && conda env update -f environment.yml --prune`.)

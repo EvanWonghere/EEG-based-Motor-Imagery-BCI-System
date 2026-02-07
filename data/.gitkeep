@@ -1,1 +1,5 @@
-# Place BCI Competition IV 2a dataset (.gdf) here.
+# Dataset directory (kept in repo for structure).
+# - BCI IV 2a/2b and PhysioNet EEGBCI are usually downloaded via:
+#   python python_backend/download_datasets.py
+#   (they go to MNE_DATA by default; optional copy/symlink here.)
+# - You can also place BCI IV 2a .gdf or other local files here.

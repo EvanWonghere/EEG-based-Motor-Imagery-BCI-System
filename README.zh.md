@@ -88,6 +88,8 @@ cp .env.example .env
 
 使用 MNE 或项目数据的脚本在运行时会通过 `python-dotenv` 加载项目根目录的 `.env`。请勿提交 `.env`（已列入 `.gitignore`）。
 
+**Git**：请使用 [Conventional Commits](https://www.conventionalcommits.org/)（如 `feat(scope): 描述`、`docs: ...`、`fix: ...`）。详见 `.cursorrules` 中的 Rule 6。
+
 ## 🚀 快速开始
 
 1. 创建并激活 **thesis** conda 环境：`conda env create -f environment.yml`，然后 `conda activate thesis`。（若已存在：`conda activate thesis && conda env update -f environment.yml --prune`。）
