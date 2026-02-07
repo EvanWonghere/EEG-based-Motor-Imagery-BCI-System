@@ -32,6 +32,9 @@ This project implements a Brain-Computer Interface (BCI) system based on Motor I
 ```text
 Project_Root/
 ├── data/                   # BCI Competition IV 2a Dataset (.gdf)
+├── docs/                   # Thesis and cited references
+│   ├── thesis/             # Graduation thesis (paper) for this project
+│   └── citations/          # Cited articles (PDFs, etc.)
 ├── models/                 # Saved models (.joblib) and replay_data.npz
 ├── python_backend/         # Python Source Code
 │   ├── preprocessing.py    # Filtering, Artifact Removal
@@ -53,6 +56,8 @@ Project_Root/
 ├── requirements.txt
 └── README.md
 ```
+
+**Thesis & references**: Place your graduation thesis in `docs/thesis/` and cited articles in `docs/citations/`. See `docs/README.md` for details.
 
 ## 🔄 Workflow Pipeline
 
@@ -89,7 +94,9 @@ Main variables:
 
 Scripts that use MNE or project data load `.env` via `python-dotenv` when run from the project root. Do not commit `.env` (it is in `.gitignore`).
 
-**Git**: Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat(scope): description`, `docs: ...`, `fix: ...`). See `.cursorrules` (Rule 6) for details.
+**Git**: Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat(scope): description`, `docs: ...`, `fix: ...`). See `.cursor/rules/git-commits.mdc` for details.
+
+**Cursor**: Project rules in `.cursor/rules/` ([Rules](https://cursor.com/docs/context/rules)). Commands in `.cursor/commands/` — type `/` in chat to run e.g. `/setup-env`, `/download-datasets`, `/train-model`, `/run-replay` ([Commands](https://cursor.com/docs/context/commands)).
 
 ## 🚀 Quick Start
 

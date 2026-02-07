@@ -32,6 +32,9 @@
 ```text
 Project_Root/
 ├── data/                   # 存放 BCI Competition IV 2a 数据集 (.gdf)
+├── docs/                   # 毕业论文与引用文献
+│   ├── thesis/             # 本项目的毕业设计论文
+│   └── citations/          # 引用文献（PDF 等）
 ├── models/                 # 训练好的模型 (.joblib) 与 replay_data.npz
 ├── python_backend/         # Python 源代码
 │   ├── preprocessing.py    # 滤波、去伪迹
@@ -53,6 +56,8 @@ Project_Root/
 ├── requirements.txt
 └── README.md
 ```
+
+**论文与引用**：毕业论文请放在 `docs/thesis/`，引用的文章放在 `docs/citations/`。详见 `docs/README.md`。
 
 ## 🔄 系统工作流 (Pipeline)
 
@@ -88,7 +93,9 @@ cp .env.example .env
 
 使用 MNE 或项目数据的脚本在运行时会通过 `python-dotenv` 加载项目根目录的 `.env`。请勿提交 `.env`（已列入 `.gitignore`）。
 
-**Git**：请使用 [Conventional Commits](https://www.conventionalcommits.org/)（如 `feat(scope): 描述`、`docs: ...`、`fix: ...`）。详见 `.cursorrules` 中的 Rule 6。
+**Git**：请使用 [Conventional Commits](https://www.conventionalcommits.org/)（如 `feat(scope): 描述`、`docs: ...`、`fix: ...`）。详见 `.cursor/rules/git-commits.mdc`。
+
+**Cursor**：项目规则在 `.cursor/rules/`（[规则](https://cursor.com/cn/docs/context/rules)）。命令在 `.cursor/commands/` — 在聊天中输入 `/` 可运行如 `/setup-env`、`/download-datasets`、`/train-model`、`/run-replay`（[命令](https://cursor.com/cn/docs/context/commands)）。
 
 ## 🚀 快速开始
 

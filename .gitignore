@@ -38,6 +38,13 @@ models/*.npz
 !data/.gitkeep
 !models/.gitkeep
 
+# ---- Documentation ----
+docs/thesis/*.pdf
+docx/thesis/$*.doc*
+docx/thesis/$*.xlsx
+docs/citations/*.pdf
+docs/citations/*numeric
+
 # ---- Unity ----
 unity_frontend/[Ll]ibrary/
 unity_frontend/[Tt]emp/
@@ -79,6 +86,11 @@ tempCodeRunnerFile*
 
 # ---- Cursor ----
 .cursor/
+# Keep project rules and commands under version control
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/commands/
+!.cursor/commands/**
 
 # ---- Misc ----
 *.log
