@@ -24,7 +24,7 @@ from mne.io import concatenate_raws, read_raw_edf
 # subject=1 表示 1 号受试者；runs=[6,10,14] 是“手 vs 脚”运动想象任务。
 
 print("正在加载 PhysioNet EEGBCI 数据（首次运行会自动下载）...")
-raw_fnames = eegbci.load_data(subject=1, runs=[6, 10, 14])
+raw_fnames = eegbci.load_data(subjects=1, runs=[6, 10, 14])
 
 # 每个 run 一个文件，合并成一条连续记录
 raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])

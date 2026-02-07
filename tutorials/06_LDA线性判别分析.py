@@ -42,7 +42,7 @@ from sklearn.pipeline import Pipeline
 # 三、准备数据（同 05）
 # ---------------------------------------------------------------------------
 print("加载并预处理数据...")
-raw_fnames = eegbci.load_data(subject=1, runs=[6, 10, 14])
+raw_fnames = eegbci.load_data(subjects=1, runs=[6, 10, 14])
 raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])
 eegbci.standardize(raw)
 montage = mne.channels.make_standard_montage("standard_1005")

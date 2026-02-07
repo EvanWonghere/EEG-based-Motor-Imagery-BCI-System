@@ -30,7 +30,7 @@ from mne.io import concatenate_raws, read_raw_edf
 # 二、加载数据（同教程 02）
 # ---------------------------------------------------------------------------
 print("加载数据...")
-raw_fnames = eegbci.load_data(subject=1, runs=[6, 10, 14])
+raw_fnames = eegbci.load_data(subjects=1, runs=[6, 10, 14])
 raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])
 eegbci.standardize(raw)
 montage = mne.channels.make_standard_montage("standard_1005")

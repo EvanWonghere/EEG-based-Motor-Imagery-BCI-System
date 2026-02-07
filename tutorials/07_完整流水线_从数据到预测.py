@@ -25,7 +25,7 @@ from mne.io import concatenate_raws, read_raw_edf
 # 步骤 1：加载原始数据
 # =============================================================================
 print("【步骤 1】加载 PhysioNet EEGBCI 数据...")
-raw_fnames = eegbci.load_data(subject=1, runs=[6, 10, 14])
+raw_fnames = eegbci.load_data(subjects=1, runs=[6, 10, 14])
 raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])
 eegbci.standardize(raw)
 raw.set_montage(mne.channels.make_standard_montage("standard_1005"))
