@@ -1,0 +1,18 @@
+# Conda environment for MI BCI project. Create/update: conda env create -f environment.yml
+# (or: conda activate thesis && conda env update -f environment.yml --prune)
+name: thesis
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.8,<3.13
+  - pip
+  - pip:
+    - mne>=1.0.0
+    - numpy>=1.20.0
+    - scipy>=1.7.0
+    - scikit-learn>=1.0.0
+    - pylsl>=1.16.0
+    - joblib>=1.0.0
+    - python-dotenv>=1.0.0
+    - moabb>=1.0.0
