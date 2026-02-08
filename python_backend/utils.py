@@ -33,6 +33,12 @@ def get_data_dir() -> Path:
     return get_project_root() / "data"
 
 
+# BCI IV 2a / 2b 数据所在子目录（相对 data/，与 MNE/MOABB 下载结构一致）
+# 例如: data/MNE-bnci-data/database/data-sets/001-2014/A01E.mat
+DIR_BCI_2A = "MNE-bnci-data/database/data-sets/001-2014"
+DIR_BCI_2B = "MNE-bnci-data/database/data-sets/004-2014"
+
+
 def get_models_dir() -> Path:
     """Return path to models directory."""
     return get_project_root() / "models"

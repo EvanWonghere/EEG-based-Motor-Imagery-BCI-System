@@ -32,11 +32,12 @@ from python_backend.datasets import (
     download_all_bci_datasets,
     download_physionet_eegbci,
 )
+from python_backend.utils import get_data_dir
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Download BCI datasets (BCI IV 2a/2b via MOABB, PhysioNet EEG Motor Movement/Imagery via MNE) into MNE_DATA or --path."
+        description="Download BCI datasets: BCI IV 2a/2b in GDF (official zip), PhysioNet EEGBCI via MNE. Default: project data/."
     )
     parser.add_argument(
         "--path",
@@ -78,8 +79,8 @@ def main() -> None:
 
     path = args.path
     if path is None:
-        path = get_mne_data_path()
-        print(f"Using data path: {path} (from MNE_DATA or default)")
+        path = get_data_dir()
+        print(f"Using data path: {path} (project data/; use --path to override)")
     else:
         path = path.resolve()
         path.mkdir(parents=True, exist_ok=True)
@@ -113,7 +114,7 @@ def main() -> None:
                 skip_2b=False,
             )
         print(f"\nDone. Data under: {path}")
-        print("MOABB typically stores files in a subfolder such as 'MNE-bnci-data'.")
+        print("GDF files are in data/MNE-bnci-data/database/data-sets/001-2014 and 004-2014.")
         return
 
     # With --physionet-eegbci: run BCI IV then PhysioNet EEGBCI
@@ -131,7 +132,7 @@ def main() -> None:
     print("\nDownloading PhysioNet EEG Motor Movement/Imagery (eegbci)...")
     download_physionet_eegbci(path=path, subjects=eegbci_subjects)
     print(f"\nDone. Data under: {path}")
-    print("MOABB: subfolder such as 'MNE-bnci-data'. PhysioNet EEGBCI: under MNE_DATA.")
+    print("BCI IV: data/MNE-bnci-data/database/data-sets/.... PhysioNet EEGBCI: under same path.")
 
 
 if __name__ == "__main__":

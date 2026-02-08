@@ -1,14 +1,21 @@
 """
 Dataset download utilities for MI BCI.
-- MOABB: BCI Competition IV 2a (BNCI2014_001), IV 2b (BNCI2014_004).
+- BCI IV 2a/2b: download official GDF zips (bbci.de) and extract to data/.../001-2014 and 004-2014.
 - MNE: PhysioNet EEG Motor Movement/Imagery Dataset (eegbci).
 Respects MNE_DATA from environment (set via .env or export).
 """
 import os
+import zipfile
 from pathlib import Path
 from typing import Optional, List
+from urllib.request import urlretrieve
 
 from .utils import get_project_root
+
+
+# Official BCI Competition IV GDF zip URLs (bbci.de)
+BCI_2A_GDF_ZIP = "https://www.bbci.de/competition/download/competition_iv/BCICIV_2a_gdf.zip"
+BCI_2B_GDF_ZIP = "https://www.bbci.de/competition/download/competition_iv/BCICIV_2b_gdf.zip"
 
 
 def get_mne_data_path() -> Path:
@@ -35,25 +42,39 @@ def _set_mne_data_path(target_path: Path) -> None:
         pass
 
 
+def _download_gdf_zip(url: str, out_dir: Path, dataset_name: str) -> None:
+    """Download a GDF zip from url and extract all .gdf files into out_dir."""
+    import shutil
+    import tempfile
+    out_dir.mkdir(parents=True, exist_ok=True)
+    zip_path = out_dir.parent / (dataset_name + "_gdf.zip")
+    print(f"  Downloading {url} ...")
+    urlretrieve(url, zip_path)
+    print(f"  Extracting .gdf files to {out_dir} ...")
+    with tempfile.TemporaryDirectory() as tmp:
+        with zipfile.ZipFile(zip_path, "r") as zf:
+            zf.extractall(tmp)
+        for gdf_path in Path(tmp).rglob("*.gdf"):
+            dest = out_dir / gdf_path.name
+            shutil.copy2(gdf_path, dest)
+    zip_path.unlink(missing_ok=True)
+    print(f"  Done. GDF files in {out_dir}")
+
+
 def download_bci_iv_2a(
     path: Optional[Path] = None,
     subjects: Optional[List[int]] = None,
 ) -> Path:
     """
-    Download BCI Competition IV 2a (BNCI2014_001, 4-class MI: left/right hand, feet, tongue).
-    Returns the data root path used.
+    Download BCI Competition IV 2a in GDF format (official zip from bbci.de).
+    Extracts to path/MNE-bnci-data/database/data-sets/001-2014/ (A01T.gdf, A01E.gdf, ...).
+    subjects is ignored; zip contains all 9 subjects. Returns the data root path used.
     """
-    from moabb.datasets import BNCI2014_001
-
     target = path or get_mne_data_path()
     _set_mne_data_path(target)
-    subject_list = subjects if subjects is not None else list(range(1, 10))
-    print(f"Downloading BCI IV 2a (BNCI2014_001) to {target} (subjects {subject_list})...")
-    dataset = BNCI2014_001()
-    try:
-        dataset.download(subject_list=subject_list, path=str(target))
-    except AttributeError:
-        dataset.get_data(subjects=subject_list)
+    out_dir = target / "MNE-bnci-data" / "database" / "data-sets" / "001-2014"
+    print(f"Downloading BCI IV 2a (GDF) to {out_dir} ...")
+    _download_gdf_zip(BCI_2A_GDF_ZIP, out_dir, "BCICIV_2a")
     print("BCI IV 2a done.")
     return target
 
@@ -63,20 +84,15 @@ def download_bci_iv_2b(
     subjects: Optional[List[int]] = None,
 ) -> Path:
     """
-    Download BCI Competition IV 2b (BNCI2014_004, 2-class MI).
-    Returns the data root path used.
+    Download BCI Competition IV 2b in GDF format (official zip from bbci.de).
+    Extracts to path/MNE-bnci-data/database/data-sets/004-2014/ (B01T.gdf, B01E.gdf, ...).
+    subjects is ignored; zip contains all subjects. Returns the data root path used.
     """
-    from moabb.datasets import BNCI2014_004
-
     target = path or get_mne_data_path()
     _set_mne_data_path(target)
-    subject_list = subjects if subjects is not None else list(range(1, 10))
-    print(f"Downloading BCI IV 2b (BNCI2014_004) to {target} (subjects {subject_list})...")
-    dataset = BNCI2014_004()
-    try:
-        dataset.download(subject_list=subject_list, path=str(target))
-    except AttributeError:
-        dataset.get_data(subjects=subject_list)
+    out_dir = target / "MNE-bnci-data" / "database" / "data-sets" / "004-2014"
+    print(f"Downloading BCI IV 2b (GDF) to {out_dir} ...")
+    _download_gdf_zip(BCI_2B_GDF_ZIP, out_dir, "BCICIV_2b")
     print("BCI IV 2b done.")
     return target
 

@@ -23,6 +23,7 @@ from pylsl import StreamInfo, StreamOutlet
 
 from python_backend.training import load_model
 from python_backend.utils import get_project_root
+from python_backend.utils import get_models_dir
 
 
 # LSL stream name Unity will resolve
@@ -71,12 +72,18 @@ def run_simulation(
         print("Stopped.")
 
 
-# Default mapping: adapt to your event_id (e.g. 2=feet, 3=hands from PhysioNet)
-DEFAULT_COMMAND_MAP = {3: "Left", 2: "Right"}
+# 预测标签 -> 命令字符串。支持 PhysioNet (2/3)、BCI 2a/2b (769/770)、2b 部分为 (1/2)
+DEFAULT_COMMAND_MAP = {3: "Left", 2: "Right", 769: "Left", 770: "Right", 1: "Left", 2: "Right"}
 
 
 def main() -> None:
-    """Entry point: load data from models/replay_data.npz (saved by train_model.py)."""
+    """Entry point: 从 models/replay_data.npz 加载数据，可选 --model 指定模型名（如 best_model_sub1）。"""
+    import argparse
+    parser = argparse.ArgumentParser(description="LSL 回放：加载模型与 replay 数据，发送分类结果")
+    parser.add_argument("--model", "-m", default="best_model_sub1",
+                        help="模型名称（不含扩展名），如 best_model_sub1、csp_lda_sub1（默认: best_model_sub1）")
+    args = parser.parse_args()
+
     root = get_project_root()
     try:
         data_path = root / "models" / "replay_data.npz"
@@ -90,7 +97,16 @@ def main() -> None:
     except Exception as e:
         print(f"Cannot load replay data: {e}")
         return
-    run_simulation(X_train, y_train, DEFAULT_COMMAND_MAP)
+
+    models_dir = get_models_dir()
+    model_name = args.model
+    if not (models_dir / f"{model_name}.pkl").exists() and not (models_dir / f"{model_name}.joblib").exists():
+        if model_name == "best_model_sub1":
+            if (models_dir / "csp_lda.joblib").exists() or (models_dir / "csp_lda.pkl").exists():
+                model_name = "csp_lda"
+                print("Using fallback model: csp_lda (best_model_sub1 not found)")
+    print(f"Using model: {model_name}")
+    run_simulation(X_train, y_train, DEFAULT_COMMAND_MAP, model_name=model_name)
 
 
 if __name__ == "__main__":

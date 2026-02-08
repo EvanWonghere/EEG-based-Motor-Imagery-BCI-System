@@ -35,6 +35,7 @@ data/MNE-eegbci-data/
 models/*.joblib
 models/*.pkl
 models/*.npz
+models/analysis/
 !data/.gitkeep
 !models/.gitkeep
 

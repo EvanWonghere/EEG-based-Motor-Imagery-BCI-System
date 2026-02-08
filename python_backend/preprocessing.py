@@ -1,6 +1,6 @@
 """
 Filtering, artifact handling, and epoching for MI EEG data.
-Uses MNE; supports BCI Competition IV 2a (.gdf) or PhysioNet EEGBCI (.edf).
+Uses MNE; supports BCI Competition IV 2a/2b (.mat or .gdf) or PhysioNet EEGBCI (.edf).
 """
 import mne
 from mne.io import BaseRaw
