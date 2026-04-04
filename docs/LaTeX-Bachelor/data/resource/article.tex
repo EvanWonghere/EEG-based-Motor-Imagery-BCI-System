@@ -1,5 +1,5 @@
 \section{引言}
-	本模板按照《山东师范大学本科生学位论文基本格式要求（2021）》制作。
+	本模板按照《山东师范大学学士学位论文模板-理工类（2026）》制作。
 	
 	正文是学位论文的主体部分，其格式规范可根据不同学科的特点和所研究课题的表达需要而定。论文中的计量单位、公式、缩略词和符号等必须遵循国家的有关规定。论文中的图、表应按章（单元）顺序编号，如图1-1为第一章（单元）第1个图，图、表应居中排版。正文中图表标题的标注位置应为图下表上，字号应比正文小一号。
 	
@@ -13,20 +13,22 @@
 	
 \section{论文打印与装订要求}
 
-	论文统一用A4纸标准输出，双面印制，左侧装订。要求纸的四周留足空白边缘，每一面的上方(天头)和左侧(订口)应分别留边25mm，下方(地脚)和右侧(切口)应分别留边20 mm。
+	论文统一用A4纸标准输出，单面打印。要求纸的四周留足空白边缘，上边距2.5cm、下边距2cm、左边距2.5cm、右边距2cm。
 
 \section{一级标题}
-	论文中一级标题用三号粗黑体
+	一级标题：黑体（西文TNR）三号加粗，居中，段前24磅、段后18磅，单倍行距。
 \subsection{二级标题}
-	二级标题用小三号粗黑体
+	二级标题：黑体（西文TNR）小三号加粗，左对齐（靠页面最左边），段前24磅、段后6磅，单倍行距。
 \subsubsection{三级标题}
-	三级标题用四号粗黑体。正文内容使用小四号宋体。论文中的所有英文一律采用“Times New Roman”字体。字行间距一般应为固定值25磅。
+	三级标题：黑体（西文TNR）四号加粗，左对齐（靠页面最左边），段前12磅、段后6磅。正文内容使用小四号宋体（西文TNR），两端对齐，首行缩进2字符，固定行距25磅。
+
+	实际写作时：**一级标题**（如“1 引言”）保持居中；**二级及以下标题**（如“1.1 ×××”“1.1.1 ×××”）全部左对齐，从页面最左边开始。
 
 	The font of English text is Times New Roman. 
 
 
 \section{页眉与页脚}
-	每页要有页眉，其上居中打印“山东师范大学学士学位论文”字样，页码标注在页面底端（页角）外侧。打印请注意确保页码位于页脚外侧，即\textbf{封面、独创声明、目录、摘要请单面打印}。
+	每页要有页眉，其上居中打印“山东师范大学学士学位论文”字样（宋体五号）；页码标注在页面底端居中（Times New Roman 五号）。
 	
 \section{图表的使用}
 	论文中的图、表应按章（单元）顺序编号，如图1-1为第一章（单元）第1个图，图、表应居中排版。正文中图表标题的标注位置应为图下表上，字号应比正文小一号。
@@ -36,8 +38,23 @@
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=0.5\textwidth]{test.png}
-		\caption{示例图片\label{test-pic1}}
+		\bicaption{示例图片\label{test-pic1}}{Example figure}
 	\end{figure}
+
+	当一个图由两个或两个以上分图组成时，各分图分别以(a)、(b)、(c)…作为图序，并须有分图名，分图名直接列在各自分图的正下方，主图名列在所有分图的下方正中。示例如图\ref{test-subfig} 所示。\par
+
+	\begin{figure}[htbp]
+		\centering
+		\subfloat[分图一：中文分图名\label{test-subfig-a}]{
+			\includegraphics[width=0.45\textwidth]{test.png}
+		}
+		\hfill
+		\subfloat[分图二：中文分图名\label{test-subfig-b}]{
+			\includegraphics[width=0.45\textwidth]{test.png}
+		}
+		\bicaption{示例分图：主图名\label{test-subfig}}{Example subfigures: main caption}
+	\end{figure}
+	\FloatBarrier
 
 \subsection{表格}
 	请确保\texttt{$\backslash$caption}命令置于\texttt{$\backslash$label}之前，用以保证表头位于表上。
@@ -45,7 +62,7 @@
 	表格插入示例：测试表格如表\ref{test-table}所示，此处建议使用三线表格，更加复杂的表格（如自动伸缩表格）请使用tabularx或tabu环境，相关宏包已引入。
 	\begin{table}[htbp]
 		\centering
-		\caption{测试表格\label{test-table}}
+		\bicaption{测试表格\label{test-table}}{Example table}
 		\begin{tabular}{ccccc}
 			\toprule
 			\multirow{2}*{姓名}&\multicolumn{2}{c}{森林}&\multicolumn{2}{c}{房屋}\\

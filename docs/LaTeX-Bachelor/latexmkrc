@@ -1,0 +1,2 @@
+# 使用 xelatex 生成 PDF；改完 .tex / .bib 后只需运行: latexmk
+$pdf_mode = 4;

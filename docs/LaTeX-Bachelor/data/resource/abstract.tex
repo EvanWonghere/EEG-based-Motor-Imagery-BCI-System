@@ -1,66 +1,50 @@
 \clearpage
 \setcounter{page}{1}
-\begin{center}
-\fontsize{15.75pt}{\baselineskip}
+% 中文摘要：仅保留“摘要”为大标题，段前24pt 段后18pt
 \vspace*{24pt}
-\heiti{\sdnutitlechs}  % 题目-黑体三号
-
-\vspace*{14pt}
-\fontsize{14pt}{\baselineskip}
-\fangsong{\sdnuauthorchs} % 作者-仿宋四号
-
-% \vspace*{20pt}
-\fontsize{10.5pt}{20pt}
-\fangsong{(山东师范大学\sdnucollegechs\sdnumajorchs\sdnuclasschs )} % 学校-仿宋五号
+\begin{center}
+	\heiti\zihao{3}\bfseries 摘要
+\end{center}
 \vspace*{18pt}
 
-\end{center}
-
-% 中文摘要
+% 中文摘要正文：小四 宋体 两端对齐 首行缩进2字符 固定25pt（无“摘要：”前缀）
 \phantomsection
 \addcontentsline{toc}{section}{摘要}
-% \section*{摘要}
-% \vspace*{-2mm}
 
-% \setlength{\baselineskip}{25pt}
-\fontsize{12pt}{25pt}
-\textbf{摘要：}中文摘要与关键词：对毕业论文（设计）核心内容的集中陈述，简要说明研究目的、研究方法、主要结果（结论），150－300字，中文摘要后需列出3-5个关键词。（中英文摘要合起来尽量独占一页，如果内容较多也可占据两页）
+\zihao{-4}\setlength{\baselineskip}{25pt}\setlength{\parindent}{2em}
+中文摘要与关键词：对毕业论文（设计）核心内容的集中陈述，简要说明研究目的、研究方法、主要结果（结论），150－300字，中文摘要后需列出3-5个关键词。（中英文摘要合起来尽量独占一页，如果内容较多也可占据两页）
+
+% 为“关键词”三字单独定义伪加粗宋体族（使用 macOS 自带 Songti SC）
+\setCJKfamilyfont{sdnuzhsongbold}[AutoFakeBold = {3}]{Songti SC}
+\newcommand*{\sdnusongtiBold}{\CJKfamily{sdnuzhsongbold}}
 
 \vspace*{14pt}
-\textbf{关键词：}\sdnukeywchs
-
-\vspace*{4pt}
-\fontsize{10.5pt}{25pt}
-中图分类号：\textrm{\classification}
+{\zihao{-4}\sdnusongtiBold 关键词\songti ：\sdnukeywchs}
 \vspace*{18pt}
 
-% 英文摘要
-% \newpage
+\clearpage
+% 英文摘要：标题 TNR 三号加粗，居中，段前24pt 段后18pt，单倍行距
 \phantomsection
 \addcontentsline{toc}{section}{Abstract}
-% \section*{Abstract}
-% \vspace*{-2mm}
 
-\begin{center}
-\fontsize{15.75pt}{\baselineskip}
 \vspace*{24pt}
-\textrm{\textbf{\sdnutitleen}}  % 题目-新罗马三号
-
-\fontsize{12pt}{\baselineskip}
-\vspace*{12pt}
-\textrm{\sdnuauthorens} % 作者-新罗马小四
-
-\textrm{(\sdnucollegeen, \sdnuen)} % 单位-新罗马小四
-
+\begin{center}
+	\textrm{\zihao{3}\bfseries Abstract}
 \end{center}
+\vspace*{18pt}
 
-\fontsize{12pt}{25pt}
-\noindent\textbf{Abstract:~}The content of the English abstract should be basically the same as that of the Chinese abstract, and the English keywords corresponding to the Chinese keywords should be listed after the English abstract.
+% 英文摘要正文：TNR 小四，正文文本（不加粗），两端对齐，首行缩进2字符，段前0段后0，固定25磅
+{\textrm{%
+	\mdseries
+	\zihao{-4}%
+	\setlength{\baselineskip}{25pt}%
+	\setlength{\parindent}{2em}%
+	\setlength{\parskip}{0pt}%
+	The content of the English abstract should be basically the same as that of the Chinese abstract, and the English keywords corresponding to the Chinese keywords should be listed after the English abstract.}}
 
 \vspace*{6pt}
-\noindent\textbf{Key words:~}\sdnukeywen
+% 仅 “Key words:” 加粗，其后关键词 TNR 小四正常字重，无缩进，固定25磅
+\noindent\textrm{\zihao{-4}{\bfseries Key words: }\mdseries\setlength{\baselineskip}{25pt}\sdnukeywen}
 
 
 \label{abstract}  % 请勿删除此行
-
-
