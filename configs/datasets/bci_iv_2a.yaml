@@ -1,0 +1,30 @@
+# ============================================================================
+# BCI Competition IV Dataset 2a — 数据集专属参数
+# ============================================================================
+# 9 名被试，22 导联 EEG，250 Hz 采样率
+# 4 类运动想象：左手(769)、右手(770)、双脚(771)、舌头(772)
+# 本项目使用左手/右手二分类子集
+#
+# 此文件会自动被加载——当实验配置中设置 dataset.name: "bci_iv_2a" 时，
+# 配置系统会在 default.yaml 之上合并此文件的参数。
+# ============================================================================
+
+dataset:
+  name: "bci_iv_2a"
+  n_subjects: 9
+  sfreq: 250.0
+  n_channels: 22
+  sessions: ["session_T", "session_E"]  # T=训练（无反馈），E=评估（有反馈）
+  classes:
+    left_hand: 769                      # 事件码：左手运动想象
+    right_hand: 770                     # 事件码：右手运动想象
+  # GDF 文件所在子目录（相对 data_dir）
+  data_subdir: "MNE-bnci-data/database/data-sets/001-2014"
+
+preprocessing:
+  bandpass: [8, 30]                     # Mu (8-13Hz) + Beta (13-30Hz)
+  epoch:
+    tmin: -0.5
+    tmax: 3.0
+    train_tmin: 0.5                     # 运动想象最强时段
+    train_tmax: 2.5

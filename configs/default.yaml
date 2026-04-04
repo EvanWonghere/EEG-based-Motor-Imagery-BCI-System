@@ -1,0 +1,95 @@
+# ============================================================================
+# 全局默认配置 (Global Defaults)
+# ============================================================================
+#
+# 配置系统采用三层合并策略，后层覆盖前层：
+#
+#   1. configs/default.yaml              ← 你正在看的这个文件（基础默认值）
+#   2. configs/datasets/<name>.yaml      ← 数据集专属参数（由 dataset.name 自动匹配）
+#   3. configs/experiments/<name>.yaml   ← 实验专属参数（你实际运行的配置）
+#
+# 使用方式：
+#   from src.utils.config import load_config
+#   cfg = load_config("configs/experiments/fbcsp_svm.yaml")
+#   # cfg 已经是三层合并后的完整字典
+#
+# 你通常不需要修改此文件。要调整参数请在 experiments/*.yaml 中覆盖。
+# ============================================================================
+
+seed: 42                                # 全局随机种子，确保实验可复现
+
+# ----------------------------------------------------------------------------
+# 预处理流水线 (PreprocessingPipeline)
+# ----------------------------------------------------------------------------
+# 执行顺序：坏导检测 → 重参考 → 带通滤波 → 陷波滤波 → ICA → 分段 → 坏段拒绝
+#
+# 使用方式：
+#   from src.preprocessing import PreprocessingPipeline
+#   pipe = PreprocessingPipeline(cfg["preprocessing"])
+#   epochs = pipe.run(raw, events, event_id)
+#
+preprocessing:
+  # 重参考方法。"car" = 共平均参考（推荐），null = 不做重参考
+  reference: "car"
+
+  # 带通滤波频率 [低频, 高频]，单位 Hz
+  # CSP 基线实验用 [8, 30]（Mu+Beta）；FBCSP 需改为 [4, 40]（更宽频带）
+  bandpass: [8, 30]
+
+  # 陷波滤波：去除工频干扰。null = 不做；[50.0] = 去除 50Hz（中国/欧洲）
+  notch_filter: null
+
+  # 伪迹去除
+  artifact_rejection:
+    # "ica" = 启用 ICA 自动去除 EOG 伪迹；null = 跳过
+    method: null
+    # ICA 分解的成分数量（通常 15-20，不超过通道数）
+    n_components: 15
+    # 指定 EOG 通道名（如 ["EOG1"]）；null = 由 MNE 自动检测
+    eog_channels: null
+
+  # 坏导检测：true = 基于方差异常自动检测并插值坏导；false = 跳过
+  bad_channel_detection: false
+
+  # 分段 (Epoching) 参数
+  epoch:
+    tmin: -0.5                          # epoch 起始时间（秒，相对事件 onset）
+    tmax: 3.0                           # epoch 结束时间
+    train_tmin: 0.5                     # 训练时裁剪窗口起始（MI 最强时段）
+    train_tmax: 2.5                     # 训练时裁剪窗口结束
+    baseline: null                      # 基线校正区间，如 [null, 0]；null = 不校正
+    reject_threshold: 100.0e-6          # 坏段拒绝阈值（伏特），100µV；null = 不拒绝
+
+# ----------------------------------------------------------------------------
+# 特征提取
+# ----------------------------------------------------------------------------
+features:
+  # 方法：csp | fbcsp | band_power | null（深度学习直接用原始 Epochs）
+  method: "csp"
+  params:
+    n_components: 4                     # CSP 空间滤波器组分数
+    log: true                           # 输出对数方差特征
+
+# ----------------------------------------------------------------------------
+# 分类模型
+# ----------------------------------------------------------------------------
+model:
+  # 类型：lda | svm | rf | eegnet
+  type: "lda"
+  params: {}                            # 模型超参数（留空 = 使用 sklearn 默认值）
+
+# ----------------------------------------------------------------------------
+# 评估
+# ----------------------------------------------------------------------------
+evaluation:
+  method: "stratified_kfold"            # stratified_kfold | loso | cross_session
+  n_splits: 10                          # K 折数
+  metrics: ["accuracy", "kappa", "f1_weighted"]
+
+# ----------------------------------------------------------------------------
+# 输出控制
+# ----------------------------------------------------------------------------
+output:
+  save_model: true                      # 保存训练好的模型 (.pkl)
+  save_figures: true                    # 保存可视化图表
+  save_replay_data: true                # 保存 replay_data.npz 供 LSL 回放

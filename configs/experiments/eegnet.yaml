@@ -1,0 +1,55 @@
+# ============================================================================
+# EEGNet 实验配置（BCI IV 2a）
+# ============================================================================
+# 当前这份配置是经过排查和对照实验后在 Subject 1 上表现最稳定的一组：
+#   1) 频带：8-30 Hz（更贴近 MI 的 Mu/Beta 频段）
+#   2) 伪迹：不启用 ICA（当前数据下效果优于 ICA 版本）
+#   3) 训练：5 折 CV + 小验证集（val_split=0.05）+ 学习率调度
+#   4) 早停：默认开启（early_stopping=true）
+#
+# 一键运行：
+#   python scripts/train.py --config configs/experiments/eegnet.yaml --subject 1
+#
+# 若要强制“每折跑满所有 epoch”（禁用早停）：
+#   model.params.early_stopping: false
+# ============================================================================
+
+experiment:
+  name: "eegnet_2a"
+  description: "EEGNet 在 BCI IV 2a 上的实验"
+
+dataset:
+  name: "bci_iv_2a"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  train_sessions: ["session_T"]
+
+preprocessing:
+  bandpass: [8, 30]                        # MI 核心频带：Mu/Beta
+  artifact_rejection:
+    method: null                           # 当前默认不做 ICA（可改为 "ica" 做对照）
+
+features:
+  method: null                             # 深度模型直接吃时序输入，不做手工特征
+
+model:
+  type: "eegnet"
+  params:
+    n_classes: 2                           # Left vs Right
+    dropout: 0.25                          # 减少小样本过拟合
+    F1: 8                                  # 第一层时间卷积核数
+    D: 2                                   # 深度卷积乘子
+    F2: 16                                 # 可分离卷积输出通道（通常 F1*D）
+    kernel_length: 64                      # 时间卷积核长度（采样点）
+    learning_rate: 0.001                   # AdamW 初始学习率
+    weight_decay: 0.0001                   # L2 正则
+    batch_size: 32
+    n_epochs: 220                          # 最大 epoch（可能因早停提前结束）
+    early_stopping: true                   # true=验证集停滞时提前停止
+    patience: 40                           # 早停耐心（连续无改进 epoch 数）
+    val_split: 0.05                        # fold 内训练集再切分 5% 做验证
+    lr_scheduler_factor: 0.5               # Plateau 后学习率衰减系数
+    lr_scheduler_patience: 10              # 学习率调度耐心
+    min_delta: 0.0001                      # 视为“有改进”的最小损失下降
+
+evaluation:
+  n_splits: 5                              # 深度模型默认 5 折（比 10 折更稳）

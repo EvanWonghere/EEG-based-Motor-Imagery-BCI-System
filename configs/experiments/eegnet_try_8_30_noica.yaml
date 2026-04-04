@@ -1,0 +1,38 @@
+experiment:
+  name: "eegnet_try_8_30_noica"
+  description: "EEGNet ablation: 8-30Hz, no ICA, smaller val split"
+
+dataset:
+  name: "bci_iv_2a"
+  subjects: [1]
+  train_sessions: ["session_T"]
+
+preprocessing:
+  bandpass: [8, 30]
+  artifact_rejection:
+    method: null
+
+features:
+  method: null
+
+model:
+  type: "eegnet"
+  params:
+    n_classes: 2
+    dropout: 0.25
+    F1: 8
+    D: 2
+    F2: 16
+    kernel_length: 64
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    batch_size: 32
+    n_epochs: 220
+    patience: 40
+    val_split: 0.05
+    lr_scheduler_factor: 0.5
+    lr_scheduler_patience: 10
+    min_delta: 0.0001
+
+evaluation:
+  n_splits: 5

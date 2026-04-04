@@ -1,0 +1,48 @@
+# ============================================================================
+# 核心实验：FBCSP + SVM-RBF (BCI IV 2a)
+# ============================================================================
+# BCI Competition IV 冠军方案的复现：
+#   - 宽频带带通滤波 4-40 Hz（为 FBCSP 子带分解留出空间）
+#   - ICA 伪迹去除
+#   - FBCSP: 7 个 4Hz 子带 × 4 CSP 组分 = 28 维 → 互信息选 8 维
+#   - SVM-RBF 分类器
+#   - 10 折分层交叉验证
+#
+# 运行：python scripts/train.py --config configs/experiments/fbcsp_svm.yaml
+# ============================================================================
+
+experiment:
+  name: "fbcsp_svm_2a"
+  description: "FBCSP + SVM-RBF 在 BCI IV 2a 上的实验"
+
+dataset:
+  name: "bci_iv_2a"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+preprocessing:
+  bandpass: [4, 40]                       # FBCSP 需要更宽的频带
+  artifact_rejection:
+    method: "ica"
+    n_components: 15
+
+features:
+  method: "fbcsp"
+  params:
+    filter_bands:                         # 7 个 4Hz 子频带
+      - [4, 8]                            # Theta
+      - [8, 12]                           # Mu (低)
+      - [12, 16]                          # Mu (高)
+      - [16, 20]                          # Beta (低)
+      - [20, 24]                          # Beta (中)
+      - [24, 28]                          # Beta (高)
+      - [28, 32]                          # Beta (极高)
+    n_components: 4                       # 每个子带 4 个 CSP 组分
+    selection:
+      method: "mutual_info"               # 互信息特征选择
+      n_select: 8                         # 从 28 维中选 8 维
+
+model:
+  type: "svm"
+  params:
+    kernel: "rbf"
+    C: 1.0

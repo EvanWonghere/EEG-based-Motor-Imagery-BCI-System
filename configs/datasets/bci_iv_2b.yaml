@@ -1,0 +1,29 @@
+# ============================================================================
+# BCI Competition IV Dataset 2b — 数据集专属参数
+# ============================================================================
+# 9 名被试，3 导联双极 EEG (C3/Cz/C4)，250 Hz 采样率
+# 2 类运动想象：左手(769)、右手(770)
+# 每位被试 5 个 session：3 个训练（无反馈）+ 2 个评估（有反馈）
+#
+# 此文件会自动被加载——当实验配置中设置 dataset.name: "bci_iv_2b" 时，
+# 配置系统会在 default.yaml 之上合并此文件的参数。
+# ============================================================================
+
+dataset:
+  name: "bci_iv_2b"
+  n_subjects: 9
+  sfreq: 250.0
+  n_channels: 3
+  sessions: ["session_1", "session_2", "session_3", "session_4", "session_5"]
+  classes:
+    left_hand: 769
+    right_hand: 770
+  data_subdir: "MNE-bnci-data/database/data-sets/004-2014"
+
+preprocessing:
+  bandpass: [8, 30]
+  epoch:
+    tmin: -0.5
+    tmax: 3.0
+    train_tmin: 0.5
+    train_tmax: 2.5
