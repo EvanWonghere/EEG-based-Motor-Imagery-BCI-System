@@ -1,0 +1,24 @@
+# ============================================================================
+# 全方法对比实验配置
+# ============================================================================
+# 此文件仅作为参考 — evaluate.py 直接从 results/ 读取各实验的 results.json。
+# 要进行完整对比，先分别运行以下训练：
+#
+#   python scripts/train.py --config configs/experiments/csp_lda_baseline.yaml
+#   python scripts/train.py --config configs/experiments/fbcsp_svm.yaml
+#   python scripts/train.py --config configs/experiments/eegnet.yaml
+#
+# 然后运行：
+#   python scripts/evaluate.py --results-dir results/ --latex
+# ============================================================================
+
+comparison:
+  methods:
+    - csp_lda_baseline
+    - fbcsp_svm_2a
+    - eegnet_2a
+  statistical_tests:
+    alpha: 0.05
+    friedman: true
+    nemenyi: true
+    wilcoxon_pairwise: true

@@ -1,0 +1,211 @@
+/* MI-BCI Online Simulation — Dark theme */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* ── Status bar ── */
+
+#status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: #16213e;
+    font-size: 14px;
+    border-bottom: 1px solid #0f3460;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.connected { background: #00d25b; }
+.status-dot.disconnected { background: #ff4757; }
+
+.spacer { flex: 1; }
+
+#trial-counter,
+#accuracy-display {
+    background: #0f3460;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Main display ── */
+
+#main-display {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ── Idle ── */
+
+#screen-idle h1 {
+    font-size: 48px;
+    font-weight: 300;
+    color: #e94560;
+}
+
+#screen-idle p {
+    font-size: 18px;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+button {
+    padding: 14px 40px;
+    font-size: 18px;
+    border: 2px solid #e94560;
+    background: transparent;
+    color: #e94560;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover:not(:disabled) {
+    background: #e94560;
+    color: #fff;
+}
+
+button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ── Rest (fixation cross) ── */
+
+.fixation-cross {
+    font-size: 80px;
+    font-weight: 200;
+    color: #555;
+}
+
+/* ── Cue arrow ── */
+
+.arrow {
+    font-size: 160px;
+    line-height: 1;
+    transition: opacity 0.3s;
+}
+
+.arrow.left::after { content: "←"; color: #00d25b; }
+.arrow.right::after { content: "→"; color: #3498db; }
+.arrow.faded { opacity: 0.3; }
+
+.cue-label {
+    font-size: 24px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+/* ── Imagine ── */
+
+.imagine-label {
+    font-size: 22px;
+    color: #888;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ── Feedback ── */
+
+.feedback-icon {
+    font-size: 80px;
+    line-height: 1;
+}
+
+.feedback-icon.correct::after { content: "✓"; color: #00d25b; }
+.feedback-icon.wrong::after { content: "✗"; color: #ff4757; }
+
+.feedback-text {
+    font-size: 28px;
+    margin-top: 10px;
+}
+
+#confidence-bar-container {
+    width: 300px;
+    height: 24px;
+    background: #2a2a4a;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 16px;
+}
+
+.confidence-bar {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.4s ease;
+    background: linear-gradient(90deg, #e94560, #00d25b);
+}
+
+#confidence-text {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.feedback-detail {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* ── Done ── */
+
+#screen-done h1 {
+    font-size: 36px;
+    color: #00d25b;
+}
+
+.done-stats {
+    font-size: 22px;
+    color: #ccc;
+    text-align: center;
+    line-height: 1.8;
+}

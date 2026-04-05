@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MI-BCI Online Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Status bar -->
+    <header id="status-bar">
+        <span id="connection-status" class="status-dot disconnected"></span>
+        <span id="connection-text">Disconnected</span>
+        <span class="spacer"></span>
+        <span id="trial-counter">Trial: —</span>
+        <span id="accuracy-display">Accuracy: —</span>
+    </header>
+
+    <!-- Main display area -->
+    <main id="main-display">
+        <!-- Idle / Welcome screen -->
+        <div id="screen-idle" class="screen active">
+            <h1>MI-BCI 在线仿真</h1>
+            <p>Motor Imagery Brain-Computer Interface</p>
+            <button id="btn-start" disabled>Start Session</button>
+        </div>
+
+        <!-- Fixation cross (rest) -->
+        <div id="screen-rest" class="screen">
+            <div class="fixation-cross">+</div>
+        </div>
+
+        <!-- Cue arrow -->
+        <div id="screen-cue" class="screen">
+            <div id="cue-arrow" class="arrow"></div>
+            <div id="cue-text" class="cue-label"></div>
+        </div>
+
+        <!-- Imagine phase -->
+        <div id="screen-imagine" class="screen">
+            <div id="imagine-arrow" class="arrow faded"></div>
+            <div class="imagine-label">Imagining...</div>
+        </div>
+
+        <!-- Feedback -->
+        <div id="screen-feedback" class="screen">
+            <div id="feedback-icon" class="feedback-icon"></div>
+            <div id="feedback-prediction" class="feedback-text"></div>
+            <div id="confidence-bar-container">
+                <div id="confidence-bar" class="confidence-bar"></div>
+                <span id="confidence-text"></span>
+            </div>
+            <div id="feedback-latency" class="feedback-detail"></div>
+        </div>
+
+        <!-- Session complete -->
+        <div id="screen-done" class="screen">
+            <h1>Session Complete</h1>
+            <div id="done-stats" class="done-stats"></div>
+            <button id="btn-restart">Restart</button>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
