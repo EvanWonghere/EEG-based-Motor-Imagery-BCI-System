@@ -107,6 +107,8 @@ class FBCSPExtractor:
         -------
         features : np.ndarray, shape (n_trials, n_select)
         """
+        if self._selected_indices is None:
+            raise RuntimeError("FBCSPExtractor must be fit before transform")
         all_features = []
         for (lo, hi), csp in zip(self.filter_bands, self._csp_list):
             X_filt = filter_data(

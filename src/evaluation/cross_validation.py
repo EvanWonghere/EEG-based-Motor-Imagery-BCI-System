@@ -169,7 +169,7 @@ def run_cv(
         y_proba = None
         try:
             y_proba = model.predict_proba(X_test_feat)
-        except Exception:
+        except (AttributeError, NotImplementedError):
             pass
 
         fold_metrics = compute_metrics(y_test, y_pred, y_proba=y_proba, metrics=metrics)

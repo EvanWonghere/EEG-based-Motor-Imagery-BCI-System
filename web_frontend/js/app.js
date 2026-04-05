@@ -19,6 +19,9 @@
     const btnRestart = $("#btn-restart");
 
     let ws = null;
+    let reconnectDelay = 1000;
+    const MAX_RECONNECT_DELAY = 30000;
+    let reconnecting = false;
 
     // ── Screen switching ──
     function showScreen(id) {
@@ -27,27 +30,34 @@
         if (target) target.classList.add("active");
     }
 
-    // ── Connection ──
+    // ── Connection with exponential backoff ──
     function connect() {
+        if (reconnecting) return;
+        reconnecting = true;
+
         const proto = location.protocol === "https:" ? "wss" : "ws";
-        // WebSocket runs on port 8765, HTTP on 8080
-        const wsPort = 8765;
+        const wsPort = parseInt(document.documentElement.dataset.wsPort) || 8765;
         const url = `${proto}://${location.hostname}:${wsPort}`;
 
         ws = new WebSocket(url);
 
         ws.onopen = () => {
+            reconnectDelay = 1000; // reset backoff
+            reconnecting = false;
             statusDot.className = "status-dot connected";
             statusText.textContent = "Connected";
             btnStart.disabled = false;
         };
 
         ws.onclose = () => {
+            reconnecting = false;
             statusDot.className = "status-dot disconnected";
             statusText.textContent = "Disconnected";
             btnStart.disabled = true;
-            // Reconnect after 2s
-            setTimeout(connect, 2000);
+            showScreen("idle");
+            // Exponential backoff
+            setTimeout(connect, reconnectDelay);
+            reconnectDelay = Math.min(reconnectDelay * 2, MAX_RECONNECT_DELAY);
         };
 
         ws.onerror = () => {
@@ -123,21 +133,29 @@
         const predName = data.prediction_name === "left_hand" ? "Left Hand" : "Right Hand";
         $("#feedback-prediction").textContent = `Predicted: ${predName}`;
 
-        const pct = Math.round(data.confidence * 100);
+        const pct = Math.round(Number(data.confidence) * 100) || 0;
         $("#confidence-bar").style.width = `${pct}%`;
         $("#confidence-text").textContent = `${pct}%`;
+        $("#confidence-bar-container").setAttribute("aria-valuenow", pct);
 
-        $("#feedback-latency").textContent = `Latency: ${data.latency_ms}ms`;
+        $("#feedback-latency").textContent = `Latency: ${Number(data.latency_ms).toFixed(1)}ms`;
 
-        accuracyDisplay.textContent = `Accuracy: ${Math.round(data.accuracy * 100)}% (${data.correct_count}/${data.trial_num})`;
+        const acc = Math.round(Number(data.accuracy) * 100) || 0;
+        accuracyDisplay.textContent = `Accuracy: ${acc}% (${Number(data.correct_count)}/${Number(data.trial_num)})`;
     }
 
     // ── Done display ──
     function showDone(data) {
-        const pct = Math.round(data.final_accuracy * 100);
-        $("#done-stats").innerHTML =
-            `${data.total_correct} / ${data.total_trials} correct<br>` +
-            `Final accuracy: <strong>${pct}%</strong>`;
+        const pct = Math.round(Number(data.final_accuracy) * 100) || 0;
+        const stats = $("#done-stats");
+        stats.textContent = "";
+        stats.appendChild(document.createTextNode(
+            `${Number(data.total_correct)} / ${Number(data.total_trials)} correct`
+        ));
+        stats.appendChild(document.createElement("br"));
+        const strong = document.createElement("strong");
+        strong.textContent = `Final accuracy: ${pct}%`;
+        stats.appendChild(strong);
     }
 
     // ── Button handlers ──
@@ -146,7 +164,7 @@
             ws.send(JSON.stringify({ command: "start" }));
             btnStart.disabled = true;
             trialCounter.textContent = "Trial: 0";
-            accuracyDisplay.textContent = "Accuracy: —";
+            accuracyDisplay.textContent = "Accuracy: \u2014";
             showScreen("rest");
         }
     });
@@ -155,7 +173,7 @@
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ command: "start" }));
             trialCounter.textContent = "Trial: 0";
-            accuracyDisplay.textContent = "Accuracy: —";
+            accuracyDisplay.textContent = "Accuracy: \u2014";
             showScreen("rest");
         }
     });

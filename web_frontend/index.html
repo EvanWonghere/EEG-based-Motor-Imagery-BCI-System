@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-ws-port="8765">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,45 +8,45 @@
 </head>
 <body>
     <!-- Status bar -->
-    <header id="status-bar">
-        <span id="connection-status" class="status-dot disconnected"></span>
-        <span id="connection-text">Disconnected</span>
+    <header id="status-bar" role="banner">
+        <span id="connection-status" class="status-dot disconnected" role="status" aria-label="Connection status: disconnected"></span>
+        <span id="connection-text" aria-live="polite">Disconnected</span>
         <span class="spacer"></span>
-        <span id="trial-counter">Trial: —</span>
-        <span id="accuracy-display">Accuracy: —</span>
+        <span id="trial-counter" aria-live="polite">Trial: —</span>
+        <span id="accuracy-display" aria-live="polite">Accuracy: —</span>
     </header>
 
     <!-- Main display area -->
-    <main id="main-display">
+    <main id="main-display" role="main" aria-live="polite">
         <!-- Idle / Welcome screen -->
-        <div id="screen-idle" class="screen active">
+        <div id="screen-idle" class="screen active" role="region" aria-label="Welcome">
             <h1>MI-BCI 在线仿真</h1>
             <p>Motor Imagery Brain-Computer Interface</p>
-            <button id="btn-start" disabled>Start Session</button>
+            <button id="btn-start" disabled aria-label="Start BCI session">Start Session</button>
         </div>
 
         <!-- Fixation cross (rest) -->
-        <div id="screen-rest" class="screen">
-            <div class="fixation-cross">+</div>
+        <div id="screen-rest" class="screen" role="region" aria-label="Rest phase">
+            <div class="fixation-cross" aria-hidden="true">+</div>
         </div>
 
         <!-- Cue arrow -->
-        <div id="screen-cue" class="screen">
-            <div id="cue-arrow" class="arrow"></div>
+        <div id="screen-cue" class="screen" role="region" aria-label="Cue phase">
+            <div id="cue-arrow" class="arrow" aria-hidden="true"></div>
             <div id="cue-text" class="cue-label"></div>
         </div>
 
         <!-- Imagine phase -->
-        <div id="screen-imagine" class="screen">
-            <div id="imagine-arrow" class="arrow faded"></div>
+        <div id="screen-imagine" class="screen" role="region" aria-label="Motor imagery phase">
+            <div id="imagine-arrow" class="arrow faded" aria-hidden="true"></div>
             <div class="imagine-label">Imagining...</div>
         </div>
 
         <!-- Feedback -->
-        <div id="screen-feedback" class="screen">
-            <div id="feedback-icon" class="feedback-icon"></div>
+        <div id="screen-feedback" class="screen" role="region" aria-label="Feedback">
+            <div id="feedback-icon" class="feedback-icon" aria-hidden="true"></div>
             <div id="feedback-prediction" class="feedback-text"></div>
-            <div id="confidence-bar-container">
+            <div id="confidence-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Classification confidence">
                 <div id="confidence-bar" class="confidence-bar"></div>
                 <span id="confidence-text"></span>
             </div>
@@ -54,10 +54,10 @@
         </div>
 
         <!-- Session complete -->
-        <div id="screen-done" class="screen">
+        <div id="screen-done" class="screen" role="region" aria-label="Session complete">
             <h1>Session Complete</h1>
             <div id="done-stats" class="done-stats"></div>
-            <button id="btn-restart">Restart</button>
+            <button id="btn-restart" aria-label="Restart BCI session">Restart</button>
         </div>
     </main>
 

@@ -36,6 +36,7 @@ models/*.joblib
 models/*.pkl
 models/*.npz
 models/analysis/
+results/
 !data/.gitkeep
 !models/.gitkeep
 

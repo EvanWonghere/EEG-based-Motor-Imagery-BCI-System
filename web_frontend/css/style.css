@@ -113,7 +113,7 @@ button:disabled {
 .fixation-cross {
     font-size: 80px;
     font-weight: 200;
-    color: #555;
+    color: #8a8a8a;
 }
 
 /* ── Cue arrow ── */
@@ -139,7 +139,7 @@ button:disabled {
 
 .imagine-label {
     font-size: 22px;
-    color: #888;
+    color: #b0b0b0;
     animation: pulse 1.5s ease-in-out infinite;
 }
 

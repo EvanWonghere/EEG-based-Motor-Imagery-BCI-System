@@ -236,8 +236,6 @@ class EEGNetModel(BaseModel):
             F2=self.F2,
             kernel_length=self.kernel_length,
         ).to(self.device)
-        if self._net is None:
-            raise RuntimeError("Failed to initialize EEGNet module")
         net = self._net
 
         # Train/val split for optional early stopping and LR scheduling.

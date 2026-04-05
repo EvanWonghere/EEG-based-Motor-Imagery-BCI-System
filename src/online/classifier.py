@@ -74,7 +74,7 @@ class OnlineClassifier:
         try:
             proba = self.model.predict_proba(features)
             confidence = float(np.max(proba[0]))
-        except Exception:
+        except (AttributeError, NotImplementedError, IndexError):
             pass
 
         latency_ms = (time.perf_counter() - t0) * 1000

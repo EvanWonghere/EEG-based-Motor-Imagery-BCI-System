@@ -93,8 +93,8 @@ def generate_report(
             with open(cv_json, encoding="utf-8") as fh:
                 cv_data = json.load(fh)
             for fold in cv_data.get("folds", []):
-                y_true = fold.get("y_true") if "y_true" in fold else None
-                y_proba = fold.get("y_proba") if "y_proba" in fold else None
+                y_true = fold.get("y_true")
+                y_proba = fold.get("y_proba")
                 if y_true and y_proba:
                     all_y_true.extend(y_true)
                     all_y_proba.extend(y_proba)

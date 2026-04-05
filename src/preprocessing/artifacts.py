@@ -62,7 +62,7 @@ def run_ica_artifact_removal(
             eog_indices.extend(indices)
         except RuntimeError:
             # No EOG channels found — use correlation-based heuristic
-            logger.info("No EOG channels found; skipping automatic EOG component detection")
+            logger.warning("No EOG channels found; skipping automatic EOG component detection")
 
     if eog_indices:
         ica.exclude = list(set(eog_indices))

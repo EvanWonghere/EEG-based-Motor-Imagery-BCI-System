@@ -17,4 +17,5 @@ dependencies:
     - python-dotenv>=1.0.0
     - moabb>=1.0.0
     - pyyaml>=6.0
+    - matplotlib>=3.5.0
     - websockets>=14.0,<16.0
