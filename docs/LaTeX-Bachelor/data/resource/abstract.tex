@@ -12,7 +12,7 @@
 \addcontentsline{toc}{section}{摘要}
 
 \zihao{-4}\setlength{\baselineskip}{25pt}\setlength{\parindent}{2em}
-中文摘要与关键词：对毕业论文（设计）核心内容的集中陈述，简要说明研究目的、研究方法、主要结果（结论），150－300字，中文摘要后需列出3-5个关键词。（中英文摘要合起来尽量独占一页，如果内容较多也可占据两页）
+脑机接口（BCI）为运动障碍患者提供了不依赖肌肉组织的替代通信途径，其中运动想象（MI）范式因无需外部刺激、可实现主动式控制而受到广泛关注。共空间模式（CSP）是运动想象脑机接口中最经典的空间滤波方法，但其性能高度依赖预滤波频段的选择，难以适应不同被试间的个体差异。本文围绕基于脑电运动想象的脑机接口系统展开研究，实现了 CSP+LDA（基线方法）、FBCSP+SVM（改进方法）和 EEGNet（深度学习探针）三条分类流水线，在统一的评估框架下进行公平对比。以 BCI Competition IV Dataset 2a 为主实验数据集，采用 10 折分层交叉验证进行评估。实验结果表明：FBCSP+SVM 取得 82.2\% 的平均准确率（Cohen's Kappa = 0.645），相比 CSP+LDA 基线（78.7\%）提升 3.5 个百分点，相比 EEGNet（72.6\%）提升 9.6 个百分点，跨数据集全局 Friedman 检验证实方法间差异高度显著（$p < 0.001$）。在 Dataset 2b 和 PhysioNet EEGBCI 两个验证数据集上进一步证实了 FBCSP 频带自适应机制的泛化有效性。基于上述选型结论，本文还搭建了基于 WebSocket 协议的在线 BCI 仿真系统，通过数据回放与浏览器前端实现了"提示—想象—分类—反馈"的闭环流程，后端平均分类延迟 36\,ms，在线准确率与离线评估一致，验证了算法从离线到在线部署的可行性。
 
 % 为“关键词”三字单独定义伪加粗宋体族（使用 macOS 自带 Songti SC）
 \setCJKfamilyfont{sdnuzhsongbold}[AutoFakeBold = {3}]{Songti SC}
@@ -40,7 +40,7 @@
 	\setlength{\baselineskip}{25pt}%
 	\setlength{\parindent}{2em}%
 	\setlength{\parskip}{0pt}%
-	The content of the English abstract should be basically the same as that of the Chinese abstract, and the English keywords corresponding to the Chinese keywords should be listed after the English abstract.}}
+	Brain-Computer Interface (BCI) provides an alternative communication pathway for patients with motor disabilities that bypasses the neuromuscular system. Among various BCI paradigms, Motor Imagery (MI) has attracted considerable attention due to its active, stimulus-independent nature. Common Spatial Patterns (CSP) is the most widely used spatial filtering method in MI-BCI, yet its performance is highly dependent on the choice of frequency band for pre-filtering and cannot adapt to individual differences across subjects. This thesis investigates an EEG-based motor imagery BCI system, implementing three classification pipelines---CSP+LDA (baseline), FBCSP+SVM (improved method), and EEGNet (deep learning probe)---for fair comparison under a unified evaluation framework. Using BCI Competition IV Dataset 2a as the primary dataset with 10-fold stratified cross-validation, experimental results show that FBCSP+SVM achieves a mean accuracy of 82.2\% (Cohen's Kappa = 0.645), outperforming CSP+LDA (78.7\%) by 3.5 percentage points and EEGNet (72.6\%) by 9.6 percentage points. A cross-dataset Friedman test confirms highly significant differences among the three methods ($p < 0.001$). The generalization effectiveness of the FBCSP frequency-band adaptation mechanism is further validated on two additional datasets (Dataset 2b and PhysioNet EEGBCI). Based on these algorithm selection results, a WebSocket-based online BCI simulation system is developed, implementing a closed-loop pipeline of ``cue--imagine--classify--feedback'' through data replay and a browser-based frontend. The backend achieves a mean classification latency of 36\,ms, with online accuracy consistent with offline evaluation, demonstrating the feasibility of deploying the trained model in an online setting.}}
 
 \vspace*{6pt}
 % 仅 “Key words:” 加粗，其后关键词 TNR 小四正常字重，无缩进，固定25磅

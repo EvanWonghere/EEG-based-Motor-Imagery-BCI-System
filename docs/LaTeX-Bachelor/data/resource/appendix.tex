@@ -5,22 +5,293 @@
 \vspace*{-2mm}
 \zihao{5}
 \setlength{\baselineskip}{25pt}
-附录主要列入正文内过分冗长的公式推导、测量问卷、原始数据图表、实验性图片、程序全文及说明等。本项可根据论文需要编排或省略。
 
-这里是附录内容，附录等级为section，若使用下级内容，请在附录内使用subsection*开始下级。
+本附录给出系统核心模块的完整源代码，包括预处理流水线、FBCSP 特征提取器和在线仿真服务端。所有代码均采用 Python 3.10+ 编写，依赖库版本见表\ref{tab:tech-stack}。
 
-代码环境lstlisting，代码\ref{testcode1}为示例代码1，代码\ref{testcode2}为示例代码2：
-\begin{lstlisting}[caption={代码示例1\label{testcode1}}]
-int main(int argc,char **argv){
-	printf("Hello World!\n");
-	return 0;
-}
+% =====================================================================
+\subsection*{A\quad 预处理流水线}
+% =====================================================================
+
+代码\ref{code:pipeline}为预处理流水线的主控模块，按照第四章所述的 7 步流程依次执行坏导检测、共平均参考、带通滤波、陷波滤波、ICA 伪迹去除、事件分段和坏段拒绝。各步骤的开关与参数均由 YAML 配置文件驱动（见第\ref{sec:config-system}节）。
+
+\begin{lstlisting}[language=Python, caption={预处理流水线 \texttt{src/preprocessing/pipeline.py}\label{code:pipeline}}]
+class PreprocessingPipeline:
+    """Config-driven preprocessing pipeline."""
+
+    def __init__(self, config: dict[str, Any]):
+        self.config = config
+        self._ica: mne.preprocessing.ICA | None = None
+        self._quality_report: dict | None = None
+
+    def run(self, raw: BaseRaw, events: np.ndarray,
+            event_id: dict[str, int]) -> mne.Epochs:
+        cfg = self.config
+
+        # 1. Bad channel detection & interpolation
+        if cfg.get("bad_channel_detection", False):
+            detect_bad_channels(raw)
+            interpolate_bad_channels(raw)
+
+        # 2. Common Average Reference
+        ref = cfg.get("reference")
+        if ref == "car":
+            set_common_average_reference(raw)
+
+        # 3. Bandpass filter
+        bp = cfg.get("bandpass", [8, 30])
+        bandpass_filter(raw, l_freq=bp[0], h_freq=bp[1])
+
+        # 4. Notch filter (optional)
+        notch = cfg.get("notch_filter")
+        if notch:
+            notch_filter(raw, freqs=notch)
+
+        # 5. ICA artifact removal (optional)
+        art_cfg = cfg.get("artifact_rejection", {})
+        if art_cfg.get("method") == "ica":
+            raw, self._ica = run_ica_artifact_removal(
+                raw,
+                n_components=art_cfg.get("n_components", 15),
+                eog_channels=art_cfg.get("eog_channels"),
+            )
+
+        # 6. Epoching
+        ep_cfg = cfg.get("epoch", {})
+        tmin = ep_cfg.get("tmin", -0.5)
+        tmax = ep_cfg.get("tmax", 3.0)
+        baseline = ep_cfg.get("baseline")
+        if isinstance(baseline, list):
+            baseline = tuple(baseline)
+        epochs = create_epochs(raw, events, event_id,
+                               tmin=tmin, tmax=tmax,
+                               baseline=baseline)
+
+        # 7. Bad epoch rejection
+        threshold = ep_cfg.get("reject_threshold")
+        if threshold is not None:
+            epochs = reject_bad_epochs(epochs,
+                                       reject_threshold=threshold)
+
+        self._quality_report = generate_quality_report(
+            raw, epochs, self._ica)
+        return epochs
 \end{lstlisting}
-\begin{lstlisting}[caption={代码示例2\label{testcode2}}]
-int main(int argc,char **argv){
-	printf("Hello World!\n");
-	return 0;
-}
+
+% =====================================================================
+\subsection*{B\quad FBCSP 特征提取器}
+% =====================================================================
+
+代码\ref{code:fbcsp}为 FBCSP 特征提取器的完整实现，对应第五章第\ref{sec:fbcsp-theory}节的算法描述。\texttt{fit()} 方法执行子频带分解、逐带 CSP 和互信息特征选择三个步骤；\texttt{transform()} 方法将新数据通过已拟合的滤波器组进行特征投影。
+
+\begin{lstlisting}[language=Python, caption={FBCSP 特征提取器 \texttt{src/features/fbcsp.py}\label{code:fbcsp}}]
+class FBCSPExtractor:
+    """Filter Bank CSP feature extractor."""
+
+    def __init__(self, filter_bands=None, n_components=4,
+                 selection_method="mutual_info",
+                 n_select=8, sfreq=250.0):
+        self.filter_bands = filter_bands or [
+            (4, 8), (8, 12), (12, 16), (16, 20),
+            (20, 24), (24, 28), (28, 32),
+        ]
+        self.n_components = n_components
+        self.n_select = n_select
+        self.sfreq = sfreq
+        self._csp_list: list[CSP] = []
+        self._selected_indices: list[int] | None = None
+
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        self._csp_list = []
+        all_features = []
+        n_channels = X.shape[1]
+        actual_comp = min(self.n_components, n_channels - 1)
+        if actual_comp < 2:
+            actual_comp = 2
+        self._actual_components = actual_comp
+        reg = "ledoit_wolf" if n_channels <= 4 else None
+
+        for lo, hi in self.filter_bands:
+            X_filt = filter_data(X.astype(np.float64),
+                                 sfreq=self.sfreq,
+                                 l_freq=lo, h_freq=hi,
+                                 verbose=False)
+            csp = CSP(n_components=actual_comp, reg=reg,
+                      log=True, norm_trace=False)
+            feats = csp.fit_transform(X_filt, y)
+            self._csp_list.append(csp)
+            all_features.append(feats)
+
+        X_concat = np.hstack(all_features)
+        actual_select = min(self.n_select, X_concat.shape[1])
+        _, self._selected_indices = mutual_information_selection(
+            X_concat, y, n_select=actual_select)
+        return self
+
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        all_features = []
+        for (lo, hi), csp in zip(self.filter_bands,
+                                  self._csp_list):
+            X_filt = filter_data(X.astype(np.float64),
+                                 sfreq=self.sfreq,
+                                 l_freq=lo, h_freq=hi,
+                                 verbose=False)
+            all_features.append(csp.transform(X_filt))
+        X_concat = np.hstack(all_features)
+        return X_concat[:, self._selected_indices]
+
+    def get_selected_band_info(self) -> list[dict]:
+        nc = getattr(self, "_actual_components",
+                     self.n_components)
+        info = []
+        for idx in (self._selected_indices or []):
+            band_idx = idx // nc
+            info.append({
+                "feature_index": idx,
+                "band_range": self.filter_bands[band_idx],
+                "csp_component": idx % nc,
+            })
+        return info
 \end{lstlisting}
+
+% =====================================================================
+\subsection*{C\quad 在线仿真 WebSocket 服务端}
+% =====================================================================
+
+代码\ref{code:server}为在线仿真系统的 WebSocket 服务端核心逻辑，对应第七章的系统架构。\texttt{\_run\_trials()} 方法实现了"提示 → 想象 → 分类 → 反馈 → 休息"的试次状态机，通过 \texttt{\_broadcast()} 将 JSON 状态消息推送给所有已连接的浏览器客户端。
+
+\begin{lstlisting}[language=Python, caption={在线仿真服务端 \texttt{src/online/server.py}\label{code:server}}]
+TIMING = {"cue": 2.0, "imagine": 3.0,
+          "feedback": 2.0, "rest": 1.5}
+
+class BCIServer:
+    """WebSocket server driving a BCI trial loop."""
+
+    def __init__(self, classifier, replay, host="localhost",
+                 port=8765, http_port=8080, max_trials=None):
+        self.classifier = classifier
+        self.replay = replay
+        self.host, self.port = host, port
+        self.http_port = http_port
+        self.max_trials = max_trials
+        self._clients: set = set()
+        self._running = False
+
+    async def _broadcast(self, data: dict) -> None:
+        msg = json.dumps(data, ensure_ascii=False)
+        dead = set()
+        for ws in self._clients:
+            try:
+                await ws.send(msg)
+            except websockets.ConnectionClosed:
+                dead.add(ws)
+        self._clients -= dead
+
+    async def _run_trials(self) -> None:
+        self._running = True
+        trial_num, correct = 0, 0
+
+        for epoch, true_label in self.replay:
+            if not self._running:
+                break
+            if self.max_trials and trial_num >= self.max_trials:
+                break
+            trial_num += 1
+            true_name = LABEL_MAP.get(true_label,
+                                       str(true_label))
+            # CUE
+            await self._broadcast({
+                "state": "cue", "trial_num": trial_num,
+                "cue_direction": true_name})
+            await asyncio.sleep(TIMING["cue"])
+
+            # IMAGINE
+            await self._broadcast({
+                "state": "imagine", "trial_num": trial_num,
+                "cue_direction": true_name})
+            await asyncio.sleep(TIMING["imagine"])
+
+            # CLASSIFY
+            result = self.classifier.predict_trial(epoch)
+            is_correct = result["label"] == true_label
+            if is_correct:
+                correct += 1
+
+            # FEEDBACK
+            await self._broadcast({
+                "state": "feedback",
+                "trial_num": trial_num,
+                "prediction": result["label"],
+                "confidence": result["confidence"],
+                "correct": is_correct,
+                "latency_ms": result["latency_ms"],
+                "accuracy": round(correct / trial_num, 4)})
+            await asyncio.sleep(TIMING["feedback"])
+
+            # REST
+            await self._broadcast({
+                "state": "rest", "trial_num": trial_num})
+            await asyncio.sleep(TIMING["rest"])
+
+        # Session complete
+        await self._broadcast({
+            "state": "done", "total_trials": trial_num,
+            "total_correct": correct,
+            "final_accuracy": round(
+                correct / max(trial_num, 1), 4)})
+
+    async def run(self) -> None:
+        self._start_http_server()
+        await websockets.serve(self._ws_handler,
+                               self.host, self.port)
+        await asyncio.Future()  # run forever
+\end{lstlisting}
+
+% =====================================================================
+\subsection*{D\quad 默认实验配置文件}
+% =====================================================================
+
+代码\ref{code:config}为系统的全局默认 YAML 配置文件，定义了预处理、特征提取、分类模型和评估策略的所有可配置参数。实验配置通过三层合并机制（默认 → 数据集 → 实验）覆盖相应字段，详见第\ref{sec:config-system}节。
+
+\begin{lstlisting}[caption={全局默认配置 \texttt{configs/default.yaml}\label{code:config}}]
+seed: 42
+
+preprocessing:
+  reference: "car"
+  bandpass: [8, 30]
+  notch_filter: null
+  bad_channel_detection: false
+  artifact_rejection:
+    method: null
+    n_components: 15
+    eog_channels: null
+  epoch:
+    tmin: -0.5
+    tmax: 3.0
+    train_tmin: 0.5
+    train_tmax: 2.5
+    baseline: null
+    reject_threshold: 100.0e-6
+
+features:
+  method: "csp"
+  params:
+    n_components: 4
+    log: true
+
+model:
+  type: "lda"
+  params: {}
+
+evaluation:
+  method: "stratified_kfold"
+  n_splits: 10
+  metrics: ["accuracy", "kappa", "f1_weighted"]
+
+output:
+  save_model: true
+  save_figures: true
+  save_replay_data: true
+\end{lstlisting}
+
 
 \label{appendix}  % 请勿删除此行

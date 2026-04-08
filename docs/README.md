@@ -1,17 +1,28 @@
-# Thesis & References
+# Thesis Documentation
 
 Documentation and written work for the EEG-Based Motor Imagery BCI graduation project.
 
 | Directory | Contents |
 | --------- | --------- |
-| **thesis/** | Thesis work by stage (see structure below). |
-| **citations/** | Cited articles (PDFs, etc.) used across the thesis. |
+| **LaTeX-Bachelor/** | Final thesis — SDNU LaTeX template, compiled PDF |
+| **citations/** | Cited articles (PDFs) and missing papers checklist |
+| **thesis/** | Thesis work by stage: 01_Inception, 02_Midterm, 03_Final |
+| **architecture/** | System architecture design docs (from inception phase) |
+| **notes/** | Study notes on signal processing, feature extraction, etc. |
 
-**thesis/** structure:
+## Compiling the Thesis
 
-| Subdirectory | Purpose |
-| ------------ | ------- |
-| **01_Inception/** | 开题阶段 — proposal, references, defence slides (e.g. 开题报告_v3.md, 答辩PPT.pptx). |
-| **02_Midterm/** | 中期检查 — mid-term report, progress tracking (e.g. 中期报告.doc, 进度记录.xlsx). |
-| **03_Final/** | 最终论文 — final thesis and figures (e.g. 毕业论文_终稿.md). |
-| **03_Final/images/** | Figures and images for the final thesis. |
+```bash
+cd docs/LaTeX-Bachelor
+latexmk -xelatex sdnubachelor.tex
+```
+
+Requires TeX Live (2017+) with XeLaTeX. The main content files are in `LaTeX-Bachelor/data/resource/`:
+
+| File | Content |
+|------|---------|
+| `article.tex` | Main body (Chapters 1–8) |
+| `abstract.tex` | Chinese & English abstracts |
+| `references.bib` | BibTeX references |
+| `appendix.tex` | Appendix (core source code listings) |
+| `thanks.tex` | Acknowledgments |

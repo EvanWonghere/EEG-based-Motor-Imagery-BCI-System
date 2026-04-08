@@ -32,4 +32,4 @@
 
 * 每讲先**通读注释**再运行代码，改改参数观察输出。
 * 遇到不懂的 API 可查 [MNE 文档](https://mne.tools/stable/overview/index.html) 和 [scikit-learn 文档](https://scikit-learn.org/stable/user_guide.html)。
-* 学完 07 后，可对照项目根目录下 `python_backend/` 中的模块（preprocessing、training、replay_stream）加深理解。
+* 学完 07 后，可对照项目 `src/` 包中的模块（`src/preprocessing/`、`src/features/`、`src/models/`、`src/online/`）加深理解。

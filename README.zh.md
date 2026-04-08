@@ -1,108 +1,139 @@
-# 基于脑电信号的运动想象系统 (EEG-Based Motor Imagery BCI System)
+# 基于脑电信号的运动想象脑机接口系统
 
-> **本项目为计算机专业本科毕业设计。**
-> 核心目标：基于公开数据集构建离线分类模型，并通过 LSL 协议驱动 Unity 进行交互式仿真验证。
+> **本科毕业设计** — 山东师范大学 计算机科学与技术专业
 
-## 📖 项目简介
+完整的运动想象（Motor Imagery, MI）脑机接口系统：在多个公开数据集上进行三条分类流水线的离线训练与评估，并通过基于 WebSocket 的在线仿真系统实现闭环反馈。
 
-本项目旨在实现一个完整的运动想象（Motor Imagery, MI）脑机接口系统。由于不依赖实时脑电采集设备，系统采用**“离线数据驱动 + 在线仿真”**的架构。
+## 项目概述
 
-1. **Python 后端**：负责读取 BCI Competition IV 2a 数据集，进行预处理、CSP 特征提取、分类模型训练，并通过 LSL 广播模拟实时数据流。
-2. **Unity 前端**：作为 LSL 接收端，根据接收到的分类结果（如左手/右手想象）控制虚拟场景中的对象运动，提供可视化反馈。
+对**左手 (769)** 与 **右手 (770)** 运动想象脑电信号进行二分类。在统一评估框架下实现并对比三条流水线：
 
-## 🛠 技术栈
+| 流水线 | 类别 | 说明 |
+|--------|------|------|
+| **CSP + LDA** | 基线方法 | 共空间模式 + 线性判别分析 |
+| **FBCSP + SVM** | 改进方法 | 滤波器组共空间模式（互信息特征选择）+ 支持向量机 |
+| **EEGNet** | 深度学习 | 面向 EEG 的紧凑卷积神经网络（Lawhern et al., 2018） |
 
-### 1. Python 后端 (数据处理与流式传输)
+在三个数据集上验证泛化能力：
 
-* **语言版本**: Python 3.8+
-* **核心库**:
-  * `mne`: EEG 数据加载（GDF/FIF格式）、滤波、Epoching。
-  * `scikit-learn`: CSP (共空间模式) 特征提取、LDA/SVM 分类器。
-  * `numpy`/`scipy`: 数值计算与信号处理。
-  * `pylsl`: Lab Streaming Layer 协议，用于发送模拟的数据流或控制指令。
+| 数据集 | 被试数 | 通道数 | 采样率 |
+|--------|--------|--------|--------|
+| BCI Competition IV 2a | 9 | 22 | 250 Hz |
+| BCI Competition IV 2b | 9 | 3 (C3/Cz/C4) | 250 Hz |
+| PhysioNet EEGBCI | 109（使用 20 名） | 64 | 160 Hz |
 
-### 2. Unity 前端 (交互仿真)
-
-* **引擎版本**: Unity 2021.3+ (LTS)
-* **开发语言**: C#
-* **插件**: `LSL4Unity` (用于接收 LSL 数据流)。
-
-## 📂 项目结构
+## 项目结构
 
 ```text
-Project_Root/
-├── data/                   # 存放 BCI Competition IV 2a 数据集 (.gdf)
-├── docs/                   # 毕业论文与引用文献
-│   ├── thesis/             # 本项目的毕业设计论文
-│   └── citations/          # 引用文献（PDF 等）
-├── models/                 # 训练好的模型 (.joblib) 与 replay_data.npz
-├── python_backend/         # Python 源代码
-│   ├── preprocessing.py    # 滤波、去伪迹
-│   ├── training.py         # CSP + 分类器训练
-│   ├── replay_stream.py    # LSL 数据回放/仿真脚本 (核心交互入口)
-│   ├── train_model.py      # 训练入口脚本
-│   ├── download_datasets.py # CLI：下载 BCI IV 2a/2b / PhysioNet EEGBCI
-│   ├── test_datasets.py    # 测试已下载数据集是否能正确加载
-│   ├── datasets.py         # 数据集下载逻辑（MNE_DATA、MOABB）
-│   ├── utils.py            # 工具函数
-│   └── archive/            # 旧版脚本 (prototype, test_*)
-├── unity_frontend/         # Unity 项目工程目录
-│   └── Assets/
-│       ├── Scripts/        # C# 脚本 (LSLReceiver.cs, GameController.cs)
-│       └── Scenes/         # 仿真场景
-├── tutorials/               # 可选学习脚本
-├── environment.yml         # Conda 环境 thesis（pip 依赖同 requirements.txt）
-├── .env.example             # 环境变量示例（复制为 .env 并填写，勿提交 .env）
-├── requirements.txt
-└── README.md
+├── src/                        # Python 核心包
+│   ├── data/                   #   数据加载器（2a、2b、PhysioNet）
+│   ├── preprocessing/          #   带通滤波、CAR、ICA、分段
+│   ├── features/               #   CSP、FBCSP 特征提取
+│   ├── models/                 #   LDA、SVM、EEGNet 分类器
+│   ├── evaluation/             #   评估指标、交叉验证、统计检验
+│   ├── visualization/          #   图表生成、脑地形图、ERD/ERS
+│   ├── online/                 #   WebSocket 服务器、数据回放
+│   └── utils/                  #   配置加载、日志、路径管理
+├── scripts/                    # 命令行入口
+│   ├── train.py                #   训练与交叉验证
+│   ├── evaluate.py             #   多方法对比与 LaTeX 表格生成
+│   ├── analyze.py              #   论文图表生成
+│   ├── run_online.py           #   启动在线仿真系统
+│   └── download_data.py        #   通过 MNE 下载数据集
+├── configs/                    # YAML 实验配置
+│   ├── default.yaml            #   全局默认参数
+│   ├── datasets/               #   各数据集参数覆盖
+│   └── experiments/            #   各实验参数覆盖
+├── web_frontend/               # 浏览器端在线仿真界面
+├── tests/                      # pytest 测试套件
+├── docs/                       # 毕业论文（LaTeX）及参考文献
+├── results/                    # 实验输出（不纳入版本控制）
+├── python_backend/             # 早期原型脚本（已归档）
+├── environment.yml             # Conda 环境定义
+└── CLAUDE.md                   # AI 助手项目指引
 ```
 
-**论文与引用**：毕业论文请放在 `docs/thesis/`，引用的文章放在 `docs/citations/`。详见 `docs/README.md`。
+### 配置系统
 
-## 🔄 系统工作流 (Pipeline)
+三层 YAML 合并：`configs/default.yaml` → `configs/datasets/*.yaml` → `configs/experiments/*.yaml`。每一层覆盖上一层的同名参数，实验配置只需指定与默认值不同的部分。
 
-1. **离线训练阶段**:
-   * 加载 `.gdf` 数据 -> 8-30Hz 带通滤波 -> 提取 Epochs (基于 Event ID: 769, 770 等)。
-   * 运行 CSP 算法提取空间特征。
-   * 训练 LDA 分类器并评估准确率。
-   * 保存 CSP 滤波器和 LDA 模型。
-2. **在线仿真阶段 (Pseudo-Online)**:
-   * **Sender (Python)**: 读取测试集数据，模拟实时采样率，通过 `pylsl` 将特征或预测结果推送到局域网。
-   * **Receiver (Unity)**: 监听 LSL 端口，获取分类标签。
-   * **Feedback**: Unity 根据标签执行逻辑（例如：收到"Left" -> 虚拟手向左移动）。
+## 快速开始
 
-## ⚠️ 给 AI 助手的特别说明 (Context for AI)
-
-* **无需硬件代码**: 本项目**不涉及**真实的 EEG 硬件连接（如 OpenBCI、NeuroScan）。所有“实时”功能均通过重放（Replay）数据集实现。
-* **数据集**: 默认使用 **BCI Competition IV 2a** (4类 MI: 左手, 右手, 双脚, 舌头)。目前主要关注 **左手 (769)** vs **右手 (770)** 的二分类。
-* **LSL 角色**: Python 是 Outlet (发送者)，Unity 是 Inlet (接收者)。
-
-## 🔧 环境变量
-
-将 `.env.example` 复制为 `.env` 并按需设置路径（如 MNE 下载/存放数据集的位置）：
+### 1. 环境搭建
 
 ```bash
-cp .env.example .env
-# 编辑 .env：可设置 MNE_DATA=/你的路径/mne_data（不设则默认 ~/mne_data）
+conda env create -f environment.yml
+conda activate thesis
+
+# 若环境已存在：
+conda env update -f environment.yml --prune
 ```
 
-常用变量：
+将 `.env.example` 复制为 `.env`，按需设置 `MNE_DATA`（默认为 `~/mne_data`）。
 
-* **MNE_DATA** – MNE 数据集根目录（PhysioNet EEGBCI、sample 等）。未设置时 MNE 使用 `~/mne_data`。
-* 可选：数据集专用变量见 [MNE 配置](https://mne.tools/stable/overview/configuration.html)，如 `MNE_DATASETS_SAMPLE_PATH`。
+### 2. 下载数据
 
-使用 MNE 或项目数据的脚本在运行时会通过 `python-dotenv` 加载项目根目录的 `.env`。请勿提交 `.env`（已列入 `.gitignore`）。
+```bash
+python scripts/download_data.py                    # 下载 BCI IV 2a + 2b
+python scripts/download_data.py --physionet-eegbci  # 同时下载 PhysioNet
+```
 
-**Git**：请使用 [Conventional Commits](https://www.conventionalcommits.org/)（如 `feat(scope): 描述`、`docs: ...`、`fix: ...`）。详见 `.cursor/rules/git-commits.mdc`。
+### 3. 训练与评估
 
-**Cursor**：项目规则在 `.cursor/rules/`（[规则](https://cursor.com/cn/docs/context/rules)）。命令在 `.cursor/commands/` — 在聊天中输入 `/` 可运行如 `/setup-env`、`/download-datasets`、`/train-model`、`/run-replay`（[命令](https://cursor.com/cn/docs/context/commands)）。
+```bash
+# 训练单条流水线（配置驱动）
+python scripts/train.py --config configs/experiments/fbcsp_svm.yaml
 
-## 🚀 快速开始
+# 指定单个被试
+python scripts/train.py --config configs/experiments/fbcsp_svm.yaml --subject 1
 
-1. 创建并激活 **thesis** conda 环境：`conda env create -f environment.yml`，然后 `conda activate thesis`。（若已存在：`conda activate thesis && conda env update -f environment.yml --prune`。）
-2. 复制 `.env.example` 为 `.env`，按需设置 `MNE_DATA`（或使用默认）。
-3. 在 Cursor/VS Code 中：**Python: 选择解释器**（Ctrl+Shift+P），选择 conda 环境 `thesis` 的解释器。之后运行 Python 时新终端会自动激活 thesis。（若使用 Anaconda 而非 Miniconda，请编辑 `.vscode/settings.json`，将 `python.defaultInterpreterPath` 中的 `miniconda3` 改为 `anaconda3`。）
-4. **（可选）** 下载数据集：`python python_backend/download_datasets.py`（默认下载 BCI IV 2a+2b 到 `MNE_DATA`）。可加 `--2a-only` 仅下 2a；`--physionet-eegbci` 同时下载 PhysioNet EEG Motor Movement/Imagery；`--physionet-eegbci-only` 仅下载该数据集；`--path /自定义路径` 指定目录。
-5. 训练模型：`python python_backend/train_model.py`
-6. 打开 Unity 项目，进入 `MainScene` 并运行。
-7. 运行 `python python_backend/replay_stream.py` 开始推送数据。
+# 多方法对比，生成 LaTeX 表格
+python scripts/evaluate.py results/ --latex
+
+# 生成论文图表
+python scripts/analyze.py results/ figures/
+```
+
+### 4. 在线仿真
+
+在线系统通过 WebSocket 将保存的试次数据回放至训练好的模型，在浏览器中提供实时视觉反馈。
+
+```bash
+# 启动 WebSocket 后端（端口 8765）+ HTTP 服务器（端口 8080）
+python scripts/run_online.py --model results/fbcsp_svm_2a/models/fbcsp_svm_2a_sub1.pkl
+```
+
+在浏览器中打开 `http://localhost:8080`。闭环流程为：**提示 → 想象 → 分类 → 反馈 → 休息**。
+
+### 5. 运行测试
+
+```bash
+python -m pytest tests/ -v
+```
+
+## 关键技术参数
+
+- **频段范围**：8–30 Hz（Mu 节律 8–13 Hz，Beta 节律 13–30 Hz）
+- **分段窗口**：−0.5 s 至 3.0 s；训练裁剪：0.5 s 至 2.5 s
+- **评估方式**：10 折分层交叉验证
+- **评估指标**：准确率、Cohen's κ、加权 F1、ROC-AUC、混淆矩阵
+- **统计检验**：Friedman 检验、Wilcoxon 符号秩检验、配对置换检验
+
+## 主要依赖
+
+- **mne** — 脑电数据加载、滤波、分段、ICA
+- **scikit-learn** — CSP、LDA/SVM、交叉验证
+- **torch** — EEGNet 深度学习模型
+- **websockets** — 在线仿真 WebSocket 服务器
+- **matplotlib** — 论文图表生成
+
+## 开发规范
+
+- **Git 提交**：遵循 [Conventional Commits](https://www.conventionalcommits.org/)（`feat`、`fix`、`docs`、`refactor`、`test`、`chore`）
+- **Python 风格**：PEP 8，全面使用类型提示
+- **语言**：代码注释使用英文；论文及面向用户的文档使用简体中文
+- **禁止提交**：`.env`、`data/MNE-*`、`results/`、`*.pkl`、`*.npz`
+
+## 许可
+
+本项目为本科毕业设计，仅用于学术目的。

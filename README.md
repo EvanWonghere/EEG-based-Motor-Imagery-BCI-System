@@ -1,109 +1,139 @@
 # EEG-Based Motor Imagery BCI System
 
-> **Undergraduate Graduation Project (Computer Science)**
-> Focus: Offline Algorithm Implementation & Interactive Simulation via LSL.
+> **Undergraduate thesis project** — Computer Science, Shandong Normal University.
 
-## 📖 Project Overview
+A complete Motor Imagery (MI) Brain-Computer Interface system: offline training & evaluation of three classification pipelines on multiple public datasets, plus a WebSocket-based online simulation with browser frontend.
 
-This project implements a Brain-Computer Interface (BCI) system based on Motor Imagery (MI). Instead of using live hardware, this project utilizes a **"Data Replay + Simulation"** architecture.
+## Overview
 
-1. **Python Backend**: Handles data loading (BCI Competition IV 2a), preprocessing, CSP feature extraction, model training, and LSL streaming (simulation).
-2. **Unity Frontend**: Acts as the LSL receiver, visualizing the classification results (e.g., Left/Right Hand imagery) in a 3D environment.
+Binary classification of **Left Hand (769)** vs **Right Hand (770)** motor imagery EEG signals. Three pipelines are implemented and compared under a unified evaluation framework:
 
-## 🛠 Tech Stack
+| Pipeline | Category | Description |
+|----------|----------|-------------|
+| **CSP + LDA** | Baseline | Common Spatial Patterns + Linear Discriminant Analysis |
+| **FBCSP + SVM** | Improved | Filter Bank CSP with mutual-information feature selection + SVM |
+| **EEGNet** | Deep Learning | Compact CNN designed for EEG (Lawhern et al., 2018) |
 
-### 1. Python Backend (Analysis & Streaming)
+Evaluated on three datasets for generalization:
 
-* **Python**: 3.8+
-* **Libraries**:
-  * `mne`: EEG data handling (GDF/FIF), filtering, epoching.
-  * `scikit-learn`: CSP (Common Spatial Patterns), LDA/SVM classifiers.
-  * `numpy`/`scipy`: Signal processing.
-  * `pylsl`: Lab Streaming Layer protocol for simulating real-time streams.
+| Dataset | Subjects | Channels | Sampling Rate |
+|---------|----------|----------|---------------|
+| BCI Competition IV 2a | 9 | 22 | 250 Hz |
+| BCI Competition IV 2b | 9 | 3 (C3/Cz/C4) | 250 Hz |
+| PhysioNet EEGBCI | 109 (20 used) | 64 | 160 Hz |
 
-### 2. Unity Frontend (Visualization)
-
-* **Engine**: Unity 2021.3+ (LTS)
-* **Language**: C#
-* **Plugins**: `LSL4Unity` (for receiving data streams).
-
-## 📂 Directory Structure
+## Project Structure
 
 ```text
-Project_Root/
-├── data/                   # BCI Competition IV 2a Dataset (.gdf)
-├── docs/                   # Thesis and cited references
-│   ├── thesis/             # Graduation thesis (paper) for this project
-│   └── citations/          # Cited articles (PDFs, etc.)
-├── models/                 # Saved models (.joblib) and replay_data.npz
-├── python_backend/         # Python Source Code
-│   ├── preprocessing.py    # Filtering, Artifact Removal
-│   ├── training.py         # CSP + Classifier Training
-│   ├── replay_stream.py    # LSL Replay Script (Core logic for simulation)
-│   ├── train_model.py      # Training entry point
-│   ├── download_datasets.py # CLI: download BCI IV 2a/2b / PhysioNet EEGBCI
-│   ├── test_datasets.py    # Test that downloaded datasets load correctly
-│   ├── datasets.py         # Dataset download helpers (MNE_DATA, MOABB)
-│   ├── utils.py            # Utilities
-│   └── archive/            # Legacy scripts (prototype, test_*)
-├── unity_frontend/         # Unity Project
-│   └── Assets/
-│       ├── Scripts/        # C# Scripts (LSLReceiver.cs, GameController.cs)
-│       └── Scenes/         # Visualization Scenes
-├── tutorials/              # Optional learning scripts
-├── environment.yml        # Conda env thesis (pip deps from requirements.txt)
-├── .env.example           # Example env vars (copy to .env, do not commit .env)
-├── requirements.txt
-└── README.md
+├── src/                        # Core Python package
+│   ├── data/                   #   Dataset loaders (2a, 2b, PhysioNet)
+│   ├── preprocessing/          #   Bandpass filter, CAR, ICA, epoching
+│   ├── features/               #   CSP, FBCSP feature extractors
+│   ├── models/                 #   LDA, SVM, EEGNet classifiers
+│   ├── evaluation/             #   Metrics, CV, statistical tests
+│   ├── visualization/          #   Figures, topomaps, ERD/ERS
+│   ├── online/                 #   WebSocket server, replay stream
+│   └── utils/                  #   Config loading, logging, paths
+├── scripts/                    # CLI entry points
+│   ├── train.py                #   Train & cross-validate a pipeline
+│   ├── evaluate.py             #   Multi-method comparison & LaTeX tables
+│   ├── analyze.py              #   Generate thesis figures
+│   ├── run_online.py           #   Launch online BCI simulation
+│   └── download_data.py        #   Download datasets via MNE
+├── configs/                    # YAML experiment configs
+│   ├── default.yaml            #   Global defaults
+│   ├── datasets/               #   Per-dataset overrides
+│   └── experiments/            #   Per-experiment overrides
+├── web_frontend/               # Browser-based online simulation UI
+├── tests/                      # pytest test suite
+├── docs/                       # Thesis (LaTeX) and references
+├── results/                    # Experiment outputs (git-ignored)
+├── python_backend/             # Legacy prototype scripts (archived)
+├── environment.yml             # Conda environment definition
+└── CLAUDE.md                   # AI assistant project instructions
 ```
 
-**Thesis & references**: Place your graduation thesis in `docs/thesis/` and cited articles in `docs/citations/`. See `docs/README.md` for details.
+### Configuration System
 
-## 🔄 Workflow Pipeline
+Three-layer YAML merge: `configs/default.yaml` → `configs/datasets/*.yaml` → `configs/experiments/*.yaml`. Each layer overrides the previous, so experiments only specify what differs from defaults.
 
-1. **Offline Training**:
-   * Load `.gdf` data -> Bandpass Filter (8-30Hz) -> Epoching (Event IDs: 769, 770).
-   * Fit CSP to extract spatial features.
-   * Train LDA classifier and evaluate accuracy.
-   * Save the CSP filters and LDA model.
+## Quick Start
 
-2. **Online Simulation (Pseudo-Online)**:
-   * **Sender (Python)**: Loads test data and "replays" it via `pylsl` to mimic a real-time stream.
-   * **Receiver (Unity)**: Listens for the LSL stream.
-   * **Feedback**: Unity executes actions based on received markers (e.g., "Left" -> Move Object Left).
-
-## ⚠️ Note to AI Assistant (Cursor)
-
-* **No Hardware**: This project does **NOT** involve drivers for physical EEG devices (e.g., OpenBCI). All "real-time" aspects are simulated via data replay.
-* **Dataset**: Strictly follows the **BCI Competition IV 2a** format. Focus is on **Left Hand (769)** vs **Right Hand (770)** classification.
-* **LSL Configuration**: Python acts as the `StreamOutlet`; Unity acts as the `StreamInlet`.
-
-## 🔧 Environment Variables
-
-Copy `.env.example` to `.env` and set paths as needed (e.g. where MNE should download/store datasets):
+### 1. Environment Setup
 
 ```bash
-cp .env.example .env
-# Edit .env: set MNE_DATA=/path/to/your/mne_data (optional; default is ~/mne_data)
+conda env create -f environment.yml
+conda activate thesis
+
+# If environment already exists:
+conda env update -f environment.yml --prune
 ```
 
-Main variables:
+Copy `.env.example` to `.env` and set `MNE_DATA` if needed (defaults to `~/mne_data`).
 
-* **MNE_DATA** – Root directory for MNE datasets (PhysioNet EEGBCI, sample data, etc.). If unset, MNE uses `~/mne_data`.
-* Optional dataset-specific vars (see [MNE config](https://mne.tools/stable/overview/configuration.html)): e.g. `MNE_DATASETS_SAMPLE_PATH`.
+### 2. Download Data
 
-Scripts that use MNE or project data load `.env` via `python-dotenv` when run from the project root. Do not commit `.env` (it is in `.gitignore`).
+```bash
+python scripts/download_data.py                    # BCI IV 2a + 2b
+python scripts/download_data.py --physionet-eegbci  # Also download PhysioNet
+```
 
-**Git**: Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat(scope): description`, `docs: ...`, `fix: ...`). See `.cursor/rules/git-commits.mdc` for details.
+### 3. Train & Evaluate
 
-**Cursor**: Project rules in `.cursor/rules/` ([Rules](https://cursor.com/docs/context/rules)). Commands in `.cursor/commands/` — type `/` in chat to run e.g. `/setup-env`, `/download-datasets`, `/train-model`, `/run-replay` ([Commands](https://cursor.com/docs/context/commands)).
+```bash
+# Train a single pipeline (config-driven)
+python scripts/train.py --config configs/experiments/fbcsp_svm.yaml
 
-## 🚀 Quick Start
+# Train for a specific subject
+python scripts/train.py --config configs/experiments/fbcsp_svm.yaml --subject 1
 
-1. Create and activate the **thesis** conda env: `conda env create -f environment.yml` then `conda activate thesis`. (If the env already exists: `conda activate thesis && conda env update -f environment.yml --prune`.)
-2. Copy `.env.example` to `.env` and set `MNE_DATA` (or leave default).
-3. In Cursor/VS Code: **Python: Select Interpreter** (Ctrl+Shift+P) and choose the interpreter for conda env `thesis`. New terminals will then auto-activate thesis when you run Python files. (If you use Anaconda instead of Miniconda, edit `.vscode/settings.json` and change `miniconda3` to `anaconda3` in `python.defaultInterpreterPath`.)
-4. **(Optional)** Download datasets: `python python_backend/download_datasets.py` (BCI IV 2a+2b to `MNE_DATA`). Add `--2a-only` to skip 2b; `--physionet-eegbci` to also download PhysioNet EEG Motor Movement/Imagery; `--physionet-eegbci-only` for that dataset only; `--path /custom/path` to override.
-5. Train the model: `python python_backend/train_model.py`
-6. Open Unity Project and play the `MainScene`.
-7. Start simulation: `python python_backend/replay_stream.py`
+# Compare all methods and generate LaTeX tables
+python scripts/evaluate.py results/ --latex
+
+# Generate thesis figures
+python scripts/analyze.py results/ figures/
+```
+
+### 4. Online Simulation
+
+The online system replays saved trial data through a trained model via WebSocket, providing real-time visual feedback in the browser.
+
+```bash
+# Launch WebSocket backend (port 8765) + HTTP server (port 8080)
+python scripts/run_online.py --model results/fbcsp_svm_2a/models/fbcsp_svm_2a_sub1.pkl
+```
+
+Then open `http://localhost:8080` in a browser. The closed-loop pipeline runs: **Cue → Imagine → Classify → Feedback → Rest**.
+
+### 5. Run Tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+## Key Technical Details
+
+- **Frequency band**: 8–30 Hz (Mu: 8–13 Hz, Beta: 13–30 Hz)
+- **Epoch window**: −0.5 s to 3.0 s; training crop: 0.5 s to 2.5 s
+- **Evaluation**: 10-fold stratified cross-validation
+- **Metrics**: Accuracy, Cohen's κ, weighted F1, ROC-AUC, confusion matrix
+- **Statistics**: Friedman test, Wilcoxon signed-rank, paired permutation test
+
+## Key Dependencies
+
+- **mne** — EEG data loading, filtering, epoching, ICA
+- **scikit-learn** — CSP, LDA/SVM, cross-validation
+- **torch** — EEGNet deep learning model
+- **websockets** — Online simulation WebSocket server
+- **matplotlib** — Thesis figure generation
+
+## Conventions
+
+- **Git**: [Conventional Commits](https://www.conventionalcommits.org/) (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`)
+- **Python**: PEP 8, type hints throughout
+- **Language**: English in code; 简体中文 in thesis and user-facing docs
+- **Never commit**: `.env`, `data/MNE-*`, `results/`, `*.pkl`, `*.npz`
+
+## License
+
+This project is developed for academic purposes as part of an undergraduate thesis.
