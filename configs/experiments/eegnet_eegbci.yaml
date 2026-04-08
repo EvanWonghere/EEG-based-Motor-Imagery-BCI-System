@@ -1,0 +1,30 @@
+# ============================================================================
+# EEGNet 实验 (PhysioNet EEGBCI)
+# ============================================================================
+# 64 通道, 160 Hz。选取前 20 个被试进行评估。
+#
+# 运行：python scripts/train.py --config configs/experiments/eegnet_eegbci.yaml
+# ============================================================================
+
+experiment:
+  name: "eegnet_eegbci"
+  description: "EEGNet 深度学习实验 (PhysioNet EEGBCI)"
+
+dataset:
+  name: "physionet_eegbci"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+preprocessing:
+  bandpass: [4, 40]
+  epoch:
+    reject_threshold: null                  # PhysioNet 数据幅度较大，禁用拒绝
+
+features:
+  method: null
+
+model:
+  type: "eegnet"
+  params: {}
+
+evaluation:
+  n_splits: 5

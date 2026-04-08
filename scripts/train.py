@@ -48,11 +48,10 @@ def train_subject(
     """Train on one subject, return results dict."""
     # --- Data loading ---
     ds_cfg = cfg["dataset"]
-    ds = create_dataset(
-        ds_cfg["name"],
-        data_dir=str(ROOT / "data"),
-        subjects=[subject_id],
-    )
+    ds_kwargs = dict(data_dir=str(ROOT / "data"), subjects=[subject_id])
+    if "runs" in ds_cfg:
+        ds_kwargs["runs"] = ds_cfg["runs"]
+    ds = create_dataset(ds_cfg["name"], **ds_kwargs)
     ep_cfg = cfg["preprocessing"].get("epoch", {})
     sessions = ds_cfg.get("train_sessions") or ["session_T"]
     session_letters = [str(s)[-1].upper() for s in sessions]

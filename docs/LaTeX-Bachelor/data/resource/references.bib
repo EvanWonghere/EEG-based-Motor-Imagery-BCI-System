@@ -1,38 +1,311 @@
-@article{
-  title = {A Review of Classification Algorithms for {{EEG-based}} Brain--Computer Interfaces: A 10 Year Update},
-  shorttitle = {A Review of Classification Algorithms for {{EEG-based}} Brain--Computer Interfaces},
-  author = {Lotte, F and Bougrain, L and Cichocki, A and Clerc, M and Congedo, M and Rakotomamonjy, A and Yger, F},
-  year = 2018,
-  month = apr,
-  journal = {Journal of Neural Engineering},
-  volume = {15},
-  number = {3},
-  pages = {031005},
-  publisher = {IOP Publishing},
-  issn = {1741-2552},
-  doi = {10.1088/1741-2552/aab2f2},
-  urldate = {2026-01-24},
-  abstract = {Objective. Most current electroencephalography (EEG)-based brain--computer interfaces (BCIs) are based on machine learning algorithms. There is a large diversity of classifier types that are used in this field, as described in our 2007 review paper. Now, approximately ten years after this review publication, many new algorithms have been developed and tested to classify EEG signals in BCIs. The time is therefore ripe for an updated review of EEG classification algorithms for BCIs. Approach. We surveyed the BCI and machine learning literature from 2007 to 2017 to identify the new classification approaches that have been investigated to design BCIs. We synthesize these studies in order to present such algorithms, to report how they were used for BCIs, what were the outcomes, and to identify their pros and cons. Main results. We found that the recently designed classification algorithms for EEG-based BCIs can be divided into four main categories: adaptive classifiers, matrix and tensor classifiers, transfer learning and deep learning, plus a few other miscellaneous classifiers. Among these, adaptive classifiers were demonstrated to be generally superior to static ones, even with unsupervised adaptation. Transfer learning can also prove useful although the benefits of transfer learning remain unpredictable. Riemannian geometry-based methods have reached state-of-the-art performances on multiple BCI problems and deserve to be explored more thoroughly, along with tensor-based methods. Shrinkage linear discriminant analysis and random forests also appear particularly useful for small training samples settings. On the other hand, deep learning methods have not yet shown convincing improvement over state-of-the-art BCI methods. Significance. This paper provides a comprehensive overview of the modern classification algorithms used in EEG-based BCIs, presents the principles of these methods and guidelines on when and how to use them. It also identifies a number of challenges to further advance EEG classification in BCI.},
-  langid = {english},
-  file = {/Users/evanwong/Zotero/storage/ZRMHEMD4/Lotte 等 - 2018 - A review of classification algorithms for EEG-based brain–computer interfaces a 10 year update.pdf}
+% ===================================================================
+% 参考文献库 — 基于脑电运动想象的脑机接口系统研究
+% ===================================================================
+
+% --- BCI 综述与教材 ---
+
+@book{wolpaw2012bci,
+  title     = {Brain-Computer Interfaces: Principles and Practice},
+  author    = {Wolpaw, Jonathan R and Wolpaw, Elizabeth Winter},
+  year      = {2012},
+  publisher = {Oxford University Press},
+  address   = {New York},
 }
 
-@article{
-  title = {{{EEG-based}} Brain-Computer Interface Enables Real-Time Robotic Hand Control at Individual Finger Level},
-  author = {Ding, Yidan and Udompanyawit, Chalisa and Zhang, Yisha and He, Bin},
-  year = 2025,
-  month = jun,
-  journal = {Nature Communications},
-  volume = {16},
-  number = {1},
-  pages = {5401},
-  publisher = {Nature Publishing Group},
-  issn = {2041-1723},
-  doi = {10.1038/s41467-025-61064-x},
-  urldate = {2026-02-10},
-  abstract = {Brain-computer interfaces (BCIs) connect human thoughts to external devices, offering the potential to enhance life quality for individuals with motor impairments and general population. Noninvasive BCIs are accessible to a wide audience but currently face challenges, including unintuitive mappings and imprecise control. In this study, we present a real-time noninvasive robotic control system using movement execution (ME) and motor imagery (MI) of individual finger movements to drive robotic finger motions. The proposed system advances state-of-the-art electroencephalography (EEG)-BCI technology by decoding brain signals for intended finger movements into corresponding robotic motions. In a study involving 21 able-bodied experienced BCI users, we achieved real-time decoding accuracies of 80.56\% for two-finger MI tasks and 60.61\% for three-finger tasks. Brain signal decoding was facilitated using a deep neural network, with fine-tuning enhancing BCI performance. Our findings demonstrate the feasibility of naturalistic noninvasive robotic hand control at the individuated finger level.},
-  copyright = {2025 The Author(s)},
-  langid = {english},
-  keywords = {Biomedical engineering,Brain-machine interface,Information technology,Motor cortex},
-  file = {/Users/evanwong/Zotero/storage/JRY7WSJG/Ding 等 - 2025 - EEG-based brain-computer interface enables real-time robotic hand control at individual finger level.pdf}
+@article{wolpaw2002bci,
+  title   = {Brain--Computer Interfaces for Communication and Control},
+  author  = {Wolpaw, Jonathan R and Birbaumer, Niels and McFarland, Dennis J and Pfurtscheller, Gert and Vaughan, Theresa M},
+  journal = {Clinical Neurophysiology},
+  volume  = {113},
+  number  = {6},
+  pages   = {767--791},
+  year    = {2002},
+  doi     = {10.1016/S1388-2457(02)00057-3},
+}
+
+@article{lotte2018review,
+  title   = {A Review of Classification Algorithms for {EEG}-Based Brain--Computer Interfaces: A 10 Year Update},
+  author  = {Lotte, Fabien and Bougrain, Laurent and Cichocki, Andrzej and Clerc, Maureen and Congedo, Marco and Rakotomamonjy, Alain and Yger, Florian},
+  journal = {Journal of Neural Engineering},
+  volume  = {15},
+  number  = {3},
+  pages   = {031005},
+  year    = {2018},
+  doi     = {10.1088/1741-2552/aab2f2},
+}
+
+% --- 运动想象神经生理学 ---
+
+@article{pfurtscheller1999erds,
+  title   = {Event-Related {EEG/MEG} Synchronization and Desynchronization: Basic Principles},
+  author  = {Pfurtscheller, Gert and Lopes da Silva, Fernando H},
+  journal = {Clinical Neurophysiology},
+  volume  = {110},
+  number  = {11},
+  pages   = {1842--1857},
+  year    = {1999},
+  doi     = {10.1016/S1388-2457(99)00141-8},
+}
+
+@article{neuper2001imagery,
+  title   = {Motor Imagery and Direct Brain--Computer Communication},
+  author  = {Neuper, Christa and M{\"u}ller, Gert R and K{\"u}bler, Andrea and Birbaumer, Niels and Pfurtscheller, Gert},
+  journal = {Proceedings of the IEEE},
+  volume  = {89},
+  number  = {7},
+  pages   = {1123--1134},
+  year    = {2001},
+  doi     = {10.1109/5.939829},
+}
+
+% --- CSP 方法 ---
+
+@article{ramoser2000csp,
+  title   = {Optimal Spatial Filtering of Single Trial {EEG} During Imagined Hand Movement},
+  author  = {Ramoser, Herbert and M{\"u}ller-Gerking, Johannes and Pfurtscheller, Gert},
+  journal = {IEEE Transactions on Rehabilitation Engineering},
+  volume  = {8},
+  number  = {4},
+  pages   = {441--446},
+  year    = {2000},
+  doi     = {10.1109/86.895946},
+}
+
+@article{blankertz2008csp,
+  title   = {Optimizing Spatial Filters for Robust {EEG} Single-Trial Analysis},
+  author  = {Blankertz, Benjamin and Tomioka, Ryota and Lemm, Steven and Kawanabe, Motoaki and M{\"u}ller, Klaus-Robert},
+  journal = {IEEE Signal Processing Magazine},
+  volume  = {25},
+  number  = {1},
+  pages   = {41--56},
+  year    = {2008},
+  doi     = {10.1109/MSP.2008.4408441},
+}
+
+% --- FBCSP 方法 ---
+
+@article{ang2012fbcsp,
+  title   = {Filter Bank Common Spatial Pattern Algorithm on {BCI Competition IV Datasets 2a and 2b}},
+  author  = {Ang, Kai Keng and Chin, Zheng Yang and Zhang, Haihong and Guan, Cuntai},
+  journal = {Frontiers in Neuroscience},
+  volume  = {6},
+  pages   = {39},
+  year    = {2012},
+  doi     = {10.3389/fnins.2012.00039},
+}
+
+@inproceedings{ang2008fbcsp,
+  title     = {Filter Bank Common Spatial Pattern ({FBCSP}) in Brain--Computer Interface},
+  author    = {Ang, Kai Keng and Chin, Zheng Yang and Zhang, Haihong and Guan, Cuntai},
+  booktitle = {2008 IEEE International Joint Conference on Neural Networks (IEEE World Congress on Computational Intelligence)},
+  pages     = {2390--2397},
+  year      = {2008},
+  doi       = {10.1109/IJCNN.2008.4634130},
+}
+
+% --- EEGNet 深度学习 ---
+
+@article{lawhern2018eegnet,
+  title   = {{EEGNet}: A Compact Convolutional Neural Network for {EEG}-Based Brain--Computer Interfaces},
+  author  = {Lawhern, Vernon J and Solon, Amelia J and Waytowich, Nicholas R and Gordon, Stephen M and Hung, Chou P and Lance, Brent J},
+  journal = {Journal of Neural Engineering},
+  volume  = {15},
+  number  = {5},
+  pages   = {056013},
+  year    = {2018},
+  doi     = {10.1088/1741-2552/aace8c},
+}
+
+@article{schirrmeister2017deep,
+  title   = {Deep Learning with Convolutional Neural Networks for {EEG} Decoding and Visualization},
+  author  = {Schirrmeister, Robin Tibor and Springenberg, Jost Tobias and Fiederer, Lukas Dominique Josef and Glasstetter, Martin and Eggensperger, Katharina and Tangermann, Michael and Hutter, Frank and Burgard, Wolfram and Ball, Tonio},
+  journal = {Human Brain Mapping},
+  volume  = {38},
+  number  = {11},
+  pages   = {5391--5420},
+  year    = {2017},
+  doi     = {10.1002/hbm.23730},
+}
+
+% --- 数据集 ---
+
+@article{tangermann2012bcicomp,
+  title   = {Review of the {BCI Competition IV}},
+  author  = {Tangermann, Michael and M{\"u}ller, Klaus-Robert and Aertsen, Ad and Birbaumer, Niels and Braun, Christoph and Brunner, Clemens and Leeb, Robert and Mehring, Carsten and Miller, Kai J and Mueller-Putz, Gernot R and others},
+  journal = {Frontiers in Neuroscience},
+  volume  = {6},
+  pages   = {55},
+  year    = {2012},
+  doi     = {10.3389/fnins.2012.00055},
+}
+
+@techreport{brunner2008bci2a,
+  title       = {{BCI Competition 2008 -- Graz Data Set A}},
+  author      = {Brunner, Clemens and Leeb, Robert and M{\"u}ller-Putz, Gernot R and Schl{\"o}gl, Alois and Pfurtscheller, Gert},
+  institution = {Institute for Knowledge Discovery, Graz University of Technology},
+  year        = {2008},
+}
+
+@article{leeb2008bci2b,
+  title   = {{BCI Competition 2008 -- Graz Data Set B}},
+  author  = {Leeb, Robert and Brunner, Clemens and M{\"u}ller-Putz, Gernot R and Schl{\"o}gl, Alois and Pfurtscheller, Gert},
+  journal = {Graz University of Technology, Austria},
+  year    = {2008},
+}
+
+@article{schalk2004eegbci,
+  title   = {{BCI2000}: A General-Purpose Brain-Computer Interface ({BCI}) System},
+  author  = {Schalk, Gerwin and McFarland, Dennis J and Hinterberger, Thilo and Birbaumer, Niels and Wolpaw, Jonathan R},
+  journal = {IEEE Transactions on Biomedical Engineering},
+  volume  = {51},
+  number  = {6},
+  pages   = {1034--1043},
+  year    = {2004},
+  doi     = {10.1109/TBME.2004.827072},
+}
+
+@article{goldberger2000physionet,
+  title   = {{PhysioBank, PhysioToolkit, and PhysioNet}: Components of a New Research Resource for Complex Physiologic Signals},
+  author  = {Goldberger, Ary L and Amaral, Luis A N and Glass, Leon and Hausdorff, Jeffrey M and Ivanov, Plamen Ch and Mark, Roger G and Mietus, Joseph E and Moody, George B and Peng, Chung-Kang and Stanley, H Eugene},
+  journal = {Circulation},
+  volume  = {101},
+  number  = {23},
+  pages   = {e215--e220},
+  year    = {2000},
+  doi     = {10.1161/01.CIR.101.23.e215},
+}
+
+% --- 分类器 ---
+
+@article{fisher1936lda,
+  title   = {The Use of Multiple Measurements in Taxonomic Problems},
+  author  = {Fisher, Ronald A},
+  journal = {Annals of Eugenics},
+  volume  = {7},
+  number  = {2},
+  pages   = {179--188},
+  year    = {1936},
+  doi     = {10.1111/j.1469-1809.1936.tb02137.x},
+}
+
+@book{vapnik1998svm,
+  title     = {Statistical Learning Theory},
+  author    = {Vapnik, Vladimir N},
+  year      = {1998},
+  publisher = {Wiley},
+  address   = {New York},
+}
+
+% --- 工具与软件 ---
+
+@article{gramfort2013mne,
+  title   = {{MEG} and {EEG} Data Analysis with {MNE-Python}},
+  author  = {Gramfort, Alexandre and Luessi, Martin and Larson, Eric and Engemann, Denis A and Strohmeier, Daniel and Brodbeck, Christian and Goj, Roman and Jas, Mainak and Brooks, Teon and Parkkonen, Lauri and H{\"a}m{\"a}l{\"a}inen, Matti S},
+  journal = {Frontiers in Neuroscience},
+  volume  = {7},
+  pages   = {267},
+  year    = {2013},
+  doi     = {10.3389/fnins.2013.00267},
+}
+
+@article{pedregosa2011sklearn,
+  title   = {Scikit-learn: Machine Learning in {Python}},
+  author  = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and others},
+  journal = {Journal of Machine Learning Research},
+  volume  = {12},
+  pages   = {2825--2830},
+  year    = {2011},
+}
+
+@inproceedings{paszke2019pytorch,
+  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and others},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {32},
+  year      = {2019},
+}
+
+% --- 评估指标 ---
+
+@article{cohen1960kappa,
+  title   = {A Coefficient of Agreement for Nominal Scales},
+  author  = {Cohen, Jacob},
+  journal = {Educational and Psychological Measurement},
+  volume  = {20},
+  number  = {1},
+  pages   = {37--46},
+  year    = {1960},
+  doi     = {10.1177/001316446002000104},
+}
+
+% --- 统计检验 ---
+
+@article{friedman1937ranks,
+  title   = {The Use of Ranks to Avoid the Assumption of Normality Implicit in the Analysis of Variance},
+  author  = {Friedman, Milton},
+  journal = {Journal of the American Statistical Association},
+  volume  = {32},
+  number  = {200},
+  pages   = {675--701},
+  year    = {1937},
+}
+
+@article{demsar2006comparing,
+  title   = {Statistical Comparisons of Classifiers over Multiple Data Sets},
+  author  = {Dem{\v{s}}ar, Janez},
+  journal = {Journal of Machine Learning Research},
+  volume  = {7},
+  pages   = {1--30},
+  year    = {2006},
+}
+
+% --- 特征选择 ---
+
+@article{battiti1994mi,
+  title   = {Using Mutual Information for Selecting Features in Supervised Neural Net Learning},
+  author  = {Battiti, Roberto},
+  journal = {IEEE Transactions on Neural Networks},
+  volume  = {5},
+  number  = {4},
+  pages   = {537--550},
+  year    = {1994},
+  doi     = {10.1109/72.298224},
+}
+
+% --- BCI illiteracy ---
+
+@article{allison2010bciilliteracy,
+  title   = {Could Anyone Use a {BCI}?},
+  author  = {Allison, Brendan Z and Neuper, Christa},
+  journal = {Brain-Computer Interfaces},
+  pages   = {35--54},
+  year    = {2010},
+  publisher = {Springer},
+  doi     = {10.1007/978-1-84996-272-8_3},
+}
+
+% --- 深度学习 EEG 综述 ---
+
+@article{craik2019deep,
+  title   = {Deep Learning for Electroencephalogram ({EEG}) Classification Tasks: A Review},
+  author  = {Craik, Alexander and He, Yongtian and Bhatt, Tejash and Bhatt, Heather},
+  journal = {Journal of Neural Engineering},
+  volume  = {16},
+  number  = {3},
+  pages   = {031001},
+  year    = {2019},
+  doi     = {10.1088/1741-2552/ab0ab5},
+}
+
+% --- ICA ---
+
+@article{jung2000ica,
+  title   = {Removing Electroencephalographic Artifacts by Blind Source Separation},
+  author  = {Jung, Tzyy-Ping and Makeig, Scott and Humphries, Colin and Lee, Te-Won and McKeown, Martin J and Iragui, Vicente and Sejnowski, Terrence J},
+  journal = {Psychophysiology},
+  volume  = {37},
+  number  = {2},
+  pages   = {163--178},
+  year    = {2000},
+  doi     = {10.1111/1469-8986.3720163},
 }

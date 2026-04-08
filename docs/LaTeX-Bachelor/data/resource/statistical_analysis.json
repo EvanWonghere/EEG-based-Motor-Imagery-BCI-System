@@ -1,0 +1,125 @@
+{
+  "BCI IV 2a": {
+    "n_subjects": 9,
+    "methods": {
+      "CSP+LDA": {
+        "mean_accuracy": 0.7874603174603174,
+        "std_accuracy": 0.14179410478996374,
+        "mean_kappa": 0.5749757583202918
+      },
+      "FBCSP+SVM": {
+        "mean_accuracy": 0.822063492063492,
+        "std_accuracy": 0.1595450511009784,
+        "mean_kappa": 0.6445828705144029
+      },
+      "EEGNet": {
+        "mean_accuracy": 0.7257252326217843,
+        "std_accuracy": 0.17657264660733302,
+        "mean_kappa": 0.45213471233351465
+      }
+    },
+    "friedman": {
+      "statistic": 4.514285714285711,
+      "p_value": 0.10464905532319595
+    },
+    "wilcoxon_pairwise": {
+      "CSP+LDA_vs_FBCSP+SVM": {
+        "statistic": 14.5,
+        "p_value": 0.6640625,
+        "significant_005": false
+      },
+      "CSP+LDA_vs_EEGNet": {
+        "statistic": 4.0,
+        "p_value": 0.02734375,
+        "significant_005": true
+      },
+      "FBCSP+SVM_vs_EEGNet": {
+        "statistic": 14.0,
+        "p_value": 0.359375,
+        "significant_005": false
+      }
+    }
+  },
+  "BCI IV 2b": {
+    "n_subjects": 9,
+    "methods": {
+      "CSP+LDA": {
+        "mean_accuracy": 0.6241618566618566,
+        "std_accuracy": 0.09922581431905603,
+        "mean_kappa": 0.2483237133237133
+      },
+      "FBCSP+SVM": {
+        "mean_accuracy": 0.6606072631072633,
+        "std_accuracy": 0.11005068213146908,
+        "mean_kappa": 0.3212193931050698
+      },
+      "EEGNet": {
+        "mean_accuracy": 0.6655600459081472,
+        "std_accuracy": 0.11292127259480413,
+        "mean_kappa": 0.3311298226769079
+      }
+    },
+    "friedman": {
+      "statistic": 6.228571428571415,
+      "p_value": 0.04441021740490945
+    },
+    "wilcoxon_pairwise": {
+      "CSP+LDA_vs_FBCSP+SVM": {
+        "statistic": 4.0,
+        "p_value": 0.02734375,
+        "significant_005": true
+      },
+      "CSP+LDA_vs_EEGNet": {
+        "statistic": 4.0,
+        "p_value": 0.02734375,
+        "significant_005": true
+      },
+      "FBCSP+SVM_vs_EEGNet": {
+        "statistic": 16.0,
+        "p_value": 0.84375,
+        "significant_005": false
+      }
+    }
+  },
+  "PhysioNet": {
+    "n_subjects": 20,
+    "methods": {
+      "CSP+LDA": {
+        "mean_accuracy": 0.6155555555555556,
+        "std_accuracy": 0.11969096008440208,
+        "mean_kappa": 0.23006392278187474
+      },
+      "FBCSP+SVM": {
+        "mean_accuracy": 0.6016666666666668,
+        "std_accuracy": 0.12354211557597537,
+        "mean_kappa": 0.20366454288385438
+      },
+      "EEGNet": {
+        "mean_accuracy": 0.47888888888888886,
+        "std_accuracy": 0.04065816547451553,
+        "mean_kappa": -0.041677152927595565
+      }
+    },
+    "friedman": {
+      "statistic": 10.800000000000011,
+      "p_value": 0.004516580942612642
+    },
+    "wilcoxon_pairwise": {
+      "CSP+LDA_vs_FBCSP+SVM": {
+        "statistic": 80.0,
+        "p_value": 0.3504465376910576,
+        "significant_005": false
+      },
+      "CSP+LDA_vs_EEGNet": {
+        "statistic": 11.5,
+        "p_value": 0.00048138070369508067,
+        "significant_005": true
+      },
+      "FBCSP+SVM_vs_EEGNet": {
+        "statistic": 16.0,
+        "p_value": 0.0008899536071042574,
+        "significant_005": true
+      }
+    }
+  }
+}

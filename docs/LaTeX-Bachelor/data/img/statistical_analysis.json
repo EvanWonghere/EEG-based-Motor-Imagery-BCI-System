@@ -1,0 +1,309 @@
+{
+  "method_names": [
+    "csp_lda_2b",
+    "csp_lda_baseline",
+    "csp_lda_eegbci",
+    "eegnet_2a",
+    "eegnet_2b",
+    "eegnet_eegbci",
+    "fbcsp_svm_2a",
+    "fbcsp_svm_2b",
+    "fbcsp_svm_eegbci"
+  ],
+  "subject_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "per_method": {
+    "csp_lda_2b": {
+      "mean_accuracy": 0.6241618566618566,
+      "std_accuracy": 0.09922581431905603,
+      "ci_95": [
+        0.5432634887538355,
+        0.7050602245698778
+      ]
+    },
+    "csp_lda_baseline": {
+      "mean_accuracy": 0.7874603174603174,
+      "std_accuracy": 0.14179410478996374,
+      "ci_95": [
+        0.6718562104524091,
+        0.9030644244682258
+      ]
+    },
+    "csp_lda_eegbci": {
+      "mean_accuracy": 0.6333333333333333,
+      "std_accuracy": 0.1337442228538355,
+      "ci_95": [
+        0.5242922594932966,
+        0.74237440717337
+      ]
+    },
+    "eegnet_2a": {
+      "mean_accuracy": 0.7257252326217843,
+      "std_accuracy": 0.17657264660733302,
+      "ci_95": [
+        0.5817663341661659,
+        0.8696841310774028
+      ]
+    },
+    "eegnet_2b": {
+      "mean_accuracy": 0.6655600459081472,
+      "std_accuracy": 0.11292127259480413,
+      "ci_95": [
+        0.573495831391925,
+        0.7576242604243695
+      ]
+    },
+    "eegnet_eegbci": {
+      "mean_accuracy": 0.4790123456790123,
+      "std_accuracy": 0.0390014049356329,
+      "ci_95": [
+        0.4472146725929814,
+        0.5108100187650432
+      ]
+    },
+    "fbcsp_svm_2a": {
+      "mean_accuracy": 0.822063492063492,
+      "std_accuracy": 0.1595450511009784,
+      "ci_95": [
+        0.6919871169745525,
+        0.9521398671524316
+      ]
+    },
+    "fbcsp_svm_2b": {
+      "mean_accuracy": 0.6606072631072633,
+      "std_accuracy": 0.11005068213146908,
+      "ci_95": [
+        0.5708834283098652,
+        0.7503310979046613
+      ]
+    },
+    "fbcsp_svm_eegbci": {
+      "mean_accuracy": 0.6135802469135803,
+      "std_accuracy": 0.14227022509518947,
+      "ci_95": [
+        0.4975879611249286,
+        0.729572532702232
+      ]
+    }
+  },
+  "friedman": {
+    "statistic": 31.213358070500938,
+    "p_value": 0.00012873271540439358,
+    "method_names": [
+      "csp_lda_2b",
+      "csp_lda_baseline",
+      "csp_lda_eegbci",
+      "eegnet_2a",
+      "eegnet_2b",
+      "eegnet_eegbci",
+      "fbcsp_svm_2a",
+      "fbcsp_svm_2b",
+      "fbcsp_svm_eegbci"
+    ],
+    "mean_ranks": {
+      "csp_lda_2b": 5.888888888888889,
+      "csp_lda_baseline": 2.8333333333333335,
+      "csp_lda_eegbci": 5.333333333333333,
+      "eegnet_2a": 4.222222222222222,
+      "eegnet_2b": 4.611111111111111,
+      "eegnet_eegbci": 8.555555555555555,
+      "fbcsp_svm_2a": 2.611111111111111,
+      "fbcsp_svm_2b": 4.833333333333333,
+      "fbcsp_svm_eegbci": 6.111111111111111
+    },
+    "critical_difference": 4.004316652098082,
+    "pairwise_significant": {
+      "csp_lda_2b vs csp_lda_baseline": false,
+      "csp_lda_2b vs csp_lda_eegbci": false,
+      "csp_lda_2b vs eegnet_2a": false,
+      "csp_lda_2b vs eegnet_2b": false,
+      "csp_lda_2b vs eegnet_eegbci": false,
+      "csp_lda_2b vs fbcsp_svm_2a": false,
+      "csp_lda_2b vs fbcsp_svm_2b": false,
+      "csp_lda_2b vs fbcsp_svm_eegbci": false,
+      "csp_lda_baseline vs csp_lda_eegbci": false,
+      "csp_lda_baseline vs eegnet_2a": false,
+      "csp_lda_baseline vs eegnet_2b": false,
+      "csp_lda_baseline vs eegnet_eegbci": true,
+      "csp_lda_baseline vs fbcsp_svm_2a": false,
+      "csp_lda_baseline vs fbcsp_svm_2b": false,
+      "csp_lda_baseline vs fbcsp_svm_eegbci": false,
+      "csp_lda_eegbci vs eegnet_2a": false,
+      "csp_lda_eegbci vs eegnet_2b": false,
+      "csp_lda_eegbci vs eegnet_eegbci": false,
+      "csp_lda_eegbci vs fbcsp_svm_2a": false,
+      "csp_lda_eegbci vs fbcsp_svm_2b": false,
+      "csp_lda_eegbci vs fbcsp_svm_eegbci": false,
+      "eegnet_2a vs eegnet_2b": false,
+      "eegnet_2a vs eegnet_eegbci": true,
+      "eegnet_2a vs fbcsp_svm_2a": false,
+      "eegnet_2a vs fbcsp_svm_2b": false,
+      "eegnet_2a vs fbcsp_svm_eegbci": false,
+      "eegnet_2b vs eegnet_eegbci": false,
+      "eegnet_2b vs fbcsp_svm_2a": false,
+      "eegnet_2b vs fbcsp_svm_2b": false,
+      "eegnet_2b vs fbcsp_svm_eegbci": false,
+      "eegnet_eegbci vs fbcsp_svm_2a": true,
+      "eegnet_eegbci vs fbcsp_svm_2b": false,
+      "eegnet_eegbci vs fbcsp_svm_eegbci": false,
+      "fbcsp_svm_2a vs fbcsp_svm_2b": false,
+      "fbcsp_svm_2a vs fbcsp_svm_eegbci": false,
+      "fbcsp_svm_2b vs fbcsp_svm_eegbci": false
+    }
+  },
+  "pairwise_wilcoxon": {
+    "csp_lda_2b vs csp_lda_baseline": {
+      "statistic": 5.0,
+      "p_value": 0.0390625
+    },
+    "csp_lda_2b vs csp_lda_eegbci": {
+      "statistic": 22.0,
+      "p_value": 1.0
+    },
+    "csp_lda_2b vs eegnet_2a": {
+      "statistic": 13.0,
+      "p_value": 0.30078125
+    },
+    "csp_lda_2b vs eegnet_2b": {
+      "statistic": 4.0,
+      "p_value": 0.02734375
+    },
+    "csp_lda_2b vs eegnet_eegbci": {
+      "statistic": 2.0,
+      "p_value": 0.01171875
+    },
+    "csp_lda_2b vs fbcsp_svm_2a": {
+      "statistic": 3.0,
+      "p_value": 0.01953125
+    },
+    "csp_lda_2b vs fbcsp_svm_2b": {
+      "statistic": 4.0,
+      "p_value": 0.02734375
+    },
+    "csp_lda_2b vs fbcsp_svm_eegbci": {
+      "statistic": 20.0,
+      "p_value": 0.8203125
+    },
+    "csp_lda_baseline vs csp_lda_eegbci": {
+      "statistic": 7.0,
+      "p_value": 0.07421875
+    },
+    "csp_lda_baseline vs eegnet_2a": {
+      "statistic": 4.0,
+      "p_value": 0.02734375
+    },
+    "csp_lda_baseline vs eegnet_2b": {
+      "statistic": 8.0,
+      "p_value": 0.09765625
+    },
+    "csp_lda_baseline vs eegnet_eegbci": {
+      "statistic": 0.0,
+      "p_value": 0.00390625
+    },
+    "csp_lda_baseline vs fbcsp_svm_2a": {
+      "statistic": 14.5,
+      "p_value": 0.6640625
+    },
+    "csp_lda_baseline vs fbcsp_svm_2b": {
+      "statistic": 9.0,
+      "p_value": 0.12890625
+    },
+    "csp_lda_baseline vs fbcsp_svm_eegbci": {
+      "statistic": 7.0,
+      "p_value": 0.07421875
+    },
+    "csp_lda_eegbci vs eegnet_2a": {
+      "statistic": 15.0,
+      "p_value": 0.42578125
+    },
+    "csp_lda_eegbci vs eegnet_2b": {
+      "statistic": 18.0,
+      "p_value": 0.65234375
+    },
+    "csp_lda_eegbci vs eegnet_eegbci": {
+      "statistic": 2.5,
+      "p_value": 0.015625
+    },
+    "csp_lda_eegbci vs fbcsp_svm_2a": {
+      "statistic": 6.0,
+      "p_value": 0.0546875
+    },
+    "csp_lda_eegbci vs fbcsp_svm_2b": {
+      "statistic": 19.0,
+      "p_value": 0.734375
+    },
+    "csp_lda_eegbci vs fbcsp_svm_eegbci": {
+      "statistic": 14.5,
+      "p_value": 0.375
+    },
+    "eegnet_2a vs eegnet_2b": {
+      "statistic": 14.0,
+      "p_value": 0.359375
+    },
+    "eegnet_2a vs eegnet_eegbci": {
+      "statistic": 0.0,
+      "p_value": 0.00390625
+    },
+    "eegnet_2a vs fbcsp_svm_2a": {
+      "statistic": 14.0,
+      "p_value": 0.359375
+    },
+    "eegnet_2a vs fbcsp_svm_2b": {
+      "statistic": 16.0,
+      "p_value": 0.49609375
+    },
+    "eegnet_2a vs fbcsp_svm_eegbci": {
+      "statistic": 14.0,
+      "p_value": 0.34375
+    },
+    "eegnet_2b vs eegnet_eegbci": {
+      "statistic": 1.0,
+      "p_value": 0.0078125
+    },
+    "eegnet_2b vs fbcsp_svm_2a": {
+      "statistic": 6.0,
+      "p_value": 0.0546875
+    },
+    "eegnet_2b vs fbcsp_svm_2b": {
+      "statistic": 16.0,
+      "p_value": 0.84375
+    },
+    "eegnet_2b vs fbcsp_svm_eegbci": {
+      "statistic": 13.0,
+      "p_value": 0.30078125
+    },
+    "eegnet_eegbci vs fbcsp_svm_2a": {
+      "statistic": 0.0,
+      "p_value": 0.00390625
+    },
+    "eegnet_eegbci vs fbcsp_svm_2b": {
+      "statistic": 0.0,
+      "p_value": 0.00390625
+    },
+    "eegnet_eegbci vs fbcsp_svm_eegbci": {
+      "statistic": 1.0,
+      "p_value": 0.0078125
+    },
+    "fbcsp_svm_2a vs fbcsp_svm_2b": {
+      "statistic": 5.0,
+      "p_value": 0.0390625
+    },
+    "fbcsp_svm_2a vs fbcsp_svm_eegbci": {
+      "statistic": 5.0,
+      "p_value": 0.0390625
+    },
+    "fbcsp_svm_2b vs fbcsp_svm_eegbci": {
+      "statistic": 15.0,
+      "p_value": 0.42578125
+    }
+  }
+}

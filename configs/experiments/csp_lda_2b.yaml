@@ -1,0 +1,26 @@
+# ============================================================================
+# CSP + LDA 基线实验 (BCI IV 2b)
+# ============================================================================
+# 2b 仅有 3 个 EEG 通道 (C3/Cz/C4)，CSP 分量数限制为 2。
+#
+# 运行：python scripts/train.py --config configs/experiments/csp_lda_2b.yaml
+# ============================================================================
+
+experiment:
+  name: "csp_lda_2b"
+  description: "CSP + LDA 基线实验 (BCI IV 2b)"
+
+dataset:
+  name: "bci_iv_2b"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  train_sessions: ["session_T"]           # T = training runs 01-03 concatenated
+
+features:
+  method: "csp"
+  params:
+    n_components: 2                       # 3 通道最多 2 个有效分量
+    log: true
+
+model:
+  type: "lda"
+  params: {}

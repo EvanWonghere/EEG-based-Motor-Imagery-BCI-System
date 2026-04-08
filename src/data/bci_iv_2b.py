@@ -67,13 +67,56 @@ class BCIIV2bDataset(EEGDataset):
     def load_data(
         self, subject_id: int, session: str | None = None
     ) -> tuple[mne.io.Raw, np.ndarray, dict[str, int]]:
-        # Try GDF files (eval sessions first — they have feedback)
-        patterns = _GDF_PATTERNS_EVAL + _GDF_PATTERNS_TRAIN
+        """Load one session's data for a subject.
+
+        Parameters
+        ----------
+        session : str or None
+            Session letter: ``"T"`` for training runs 01-03,
+            ``"E"`` for evaluation runs 04-05.
+            If None, tries eval first, then train (single run).
+        """
+        # Select GDF patterns based on session
+        if session and session.upper() == "T":
+            patterns = _GDF_PATTERNS_TRAIN
+        elif session and session.upper() == "E":
+            patterns = _GDF_PATTERNS_EVAL
+        else:
+            # Legacy: try all patterns, return first found
+            patterns = _GDF_PATTERNS_EVAL + _GDF_PATTERNS_TRAIN
+
+        # Try to load and concatenate all runs in this session
+        paths_found = []
         for pat in patterns:
             fname = pat.format(sub=subject_id)
             path = self._find_file(fname)
             if path is not None:
-                return self._load_gdf(path)
+                paths_found.append(path)
+
+        if paths_found:
+            if len(paths_found) == 1:
+                return self._load_gdf(paths_found[0])
+            # Concatenate multiple runs, then extract events from combined raw
+            from mne.io import concatenate_raws
+            raws = []
+            for p in paths_found:
+                patch_numpy_fromstring()
+                r = read_raw_gdf(str(p), preload=True, verbose=False)
+                # Keep only the 3 EEG channels (drop EOG channels)
+                eeg_chs = [ch for ch in r.ch_names if not ch.startswith("EOG")]
+                r.pick(eeg_chs)
+                raws.append(r)
+            raw = concatenate_raws(raws)
+            # Extract events from the concatenated raw
+            ann_descriptions = set(raw.annotations.description)
+            if "769" in ann_descriptions and "770" in ann_descriptions:
+                mapping = {"769": 769, "770": 770}
+                events, _ = mne.events_from_annotations(raw, event_id=mapping, verbose=False)
+            else:
+                events, _ = mne.events_from_annotations(raw, verbose=False)
+            event_id = {"Left Hand": 769, "Right Hand": 770}
+            events = events[np.isin(events[:, 2], list(event_id.values()))]
+            return raw, events, event_id
 
         # Fallback to .mat
         raw_events = self._try_mat(subject_id)
@@ -94,6 +137,9 @@ class BCIIV2bDataset(EEGDataset):
     ) -> tuple[mne.io.Raw, np.ndarray, dict[str, int]]:
         patch_numpy_fromstring()
         raw = read_raw_gdf(str(path), preload=True, verbose=False)
+        # Keep only the 3 EEG channels (drop EOG channels)
+        eeg_chs = [ch for ch in raw.ch_names if not ch.startswith("EOG")]
+        raw.pick(eeg_chs)
 
         # Prefer annotation-based extraction (GDF annotations are strings)
         ann_descriptions = set(raw.annotations.description)

@@ -72,30 +72,49 @@ class FBCSPExtractor:
         self._csp_list = []
         all_features = []
 
+        # Auto-adjust n_components for low channel counts
+        n_channels = X.shape[1]
+        actual_components = min(self.n_components, n_channels - 1)
+        if actual_components < 2:
+            actual_components = 2
+        if actual_components != self.n_components:
+            logger.info(
+                "FBCSP: n_components adjusted %d → %d (n_channels=%d)",
+                self.n_components, actual_components, n_channels,
+            )
+        self._actual_components = actual_components
+
+        # Auto-regularize for low channel counts
+        reg = "ledoit_wolf" if n_channels <= 4 else None
+
         for lo, hi in self.filter_bands:
             X_filt = filter_data(
                 X.astype(np.float64), sfreq=self.sfreq,
                 l_freq=lo, h_freq=hi, verbose=False,
             )
             csp = CSP(
-                n_components=self.n_components,
-                reg=None, log=True, norm_trace=False,
+                n_components=actual_components,
+                reg=reg, log=True, norm_trace=False,
             )
             feats = csp.fit_transform(X_filt, y)
             self._csp_list.append(csp)
             all_features.append(feats)
 
-        # Concatenate: (n_trials, n_bands * n_components)
+        # Concatenate: (n_trials, n_bands * actual_components)
         X_concat = np.hstack(all_features)
+
+        # Adjust n_select if total features < requested
+        n_total = X_concat.shape[1]
+        actual_select = min(self.n_select, n_total)
 
         # Feature selection
         _, self._selected_indices = mutual_information_selection(
-            X_concat, y, n_select=self.n_select,
+            X_concat, y, n_select=actual_select,
         )
         logger.info(
             "FBCSP: %d bands × %d components = %d features → selected %d (indices: %s)",
-            len(self.filter_bands), self.n_components, X_concat.shape[1],
-            self.n_select, self._selected_indices,
+            len(self.filter_bands), actual_components, n_total,
+            actual_select, self._selected_indices,
         )
 
         return self
@@ -136,9 +155,10 @@ class FBCSPExtractor:
             ``"band_range"``, ``"csp_component"``.
         """
         info = []
+        nc = getattr(self, "_actual_components", self.n_components)
         for idx in (self._selected_indices or []):
-            band_idx = idx // self.n_components
-            comp_idx = idx % self.n_components
+            band_idx = idx // nc
+            comp_idx = idx % nc
             info.append({
                 "feature_index": idx,
                 "band_index": band_idx,

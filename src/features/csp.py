@@ -25,6 +25,9 @@ class CSPExtractor:
     """
 
     def __init__(self, n_components: int = 4, log: bool = True, reg: float | None = None):
+        self._requested_components = n_components
+        self._log = log
+        self._reg = reg
         self.csp = CSP(
             n_components=n_components,
             reg=reg,
@@ -34,6 +37,20 @@ class CSPExtractor:
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> CSPExtractor:
         """Fit CSP on epochs ``X`` (n_trials, n_channels, n_times)."""
+        n_channels = X.shape[1]
+        max_components = n_channels - 1  # MNE CSP requires < n_channels
+        actual = min(self._requested_components, max(2, max_components))
+        reg = self._reg
+        # Auto-regularize for low channel counts to avoid singular covariance
+        if n_channels <= 4 and reg is None:
+            reg = "ledoit_wolf"
+        if actual != self._requested_components or reg != self._reg:
+            self.csp = CSP(
+                n_components=actual,
+                reg=reg,
+                log=self._log,
+                norm_trace=False,
+            )
         self.csp.fit(X, y)
         return self
 

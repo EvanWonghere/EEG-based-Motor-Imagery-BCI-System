@@ -1,0 +1,26 @@
+# ============================================================================
+# PhysioNet EEG Motor Movement/Imagery Dataset — 数据集专属参数
+# ============================================================================
+# 109 名被试，64 导联 EEG，160 Hz 采样率
+# Runs 4/8/12: 左拳 (T1) vs 右拳 (T2) 运动想象
+#
+# 数据来源: https://physionet.org/content/eegmmidb/1.0.0/
+# ============================================================================
+
+dataset:
+  name: "physionet_eegbci"
+  n_subjects: 109
+  sfreq: 160.0
+  n_channels: 64
+  runs: [3, 7, 11, 4, 8, 12]              # left/right fist: ME (3/7/11) + MI (4/8/12)
+  classes:
+    left_hand: 769
+    right_hand: 770
+
+preprocessing:
+  bandpass: [8, 30]
+  epoch:
+    tmin: -0.5
+    tmax: 3.0
+    train_tmin: 0.5
+    train_tmax: 2.5

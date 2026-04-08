@@ -1,0 +1,29 @@
+# ============================================================================
+# EEGNet 实验 (BCI IV 2b)
+# ============================================================================
+# 3 通道 EEG 输入，端到端学习。
+#
+# 运行：python scripts/train.py --config configs/experiments/eegnet_2b.yaml
+# ============================================================================
+
+experiment:
+  name: "eegnet_2b"
+  description: "EEGNet 深度学习实验 (BCI IV 2b)"
+
+dataset:
+  name: "bci_iv_2b"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  train_sessions: ["session_T"]
+
+preprocessing:
+  bandpass: [4, 40]
+
+features:
+  method: null                            # EEGNet 端到端，无需特征提取
+
+model:
+  type: "eegnet"
+  params: {}
+
+evaluation:
+  n_splits: 5                             # 深度学习用 5 折减少训练时间

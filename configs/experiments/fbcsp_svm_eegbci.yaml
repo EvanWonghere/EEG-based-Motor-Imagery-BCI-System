@@ -1,0 +1,45 @@
+# ============================================================================
+# FBCSP + SVM-RBF 实验 (PhysioNet EEGBCI)
+# ============================================================================
+# 64 通道, 160 Hz。选取前 20 个被试进行评估。
+#
+# 运行：python scripts/train.py --config configs/experiments/fbcsp_svm_eegbci.yaml
+# ============================================================================
+
+experiment:
+  name: "fbcsp_svm_eegbci"
+  description: "FBCSP + SVM-RBF 实验 (PhysioNet EEGBCI)"
+
+dataset:
+  name: "physionet_eegbci"
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+preprocessing:
+  bandpass: [4, 40]
+  epoch:
+    reject_threshold: null                  # PhysioNet 数据幅度较大，禁用拒绝
+
+features:
+  method: "fbcsp"
+  params:
+    filter_bands:
+      - [4, 8]
+      - [8, 12]
+      - [12, 16]
+      - [16, 20]
+      - [20, 24]
+      - [24, 28]
+      - [28, 32]
+    n_components: 4
+    selection:
+      method: "mutual_info"
+      n_select: 8
+
+model:
+  type: "svm"
+  params:
+    kernel: "rbf"
+    C: 1.0
+
+evaluation:
+  n_splits: 5

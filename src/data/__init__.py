@@ -8,10 +8,12 @@ from typing import Any
 from src.data.base import EEGDataset
 from src.data.bci_iv_2a import BCIIV2aDataset
 from src.data.bci_iv_2b import BCIIV2bDataset
+from src.data.physionet_eegbci import PhysioNetEEGBCIDataset
 
 DATASET_REGISTRY: dict[str, type[EEGDataset]] = {
     "bci_iv_2a": BCIIV2aDataset,
     "bci_iv_2b": BCIIV2bDataset,
+    "physionet_eegbci": PhysioNetEEGBCIDataset,
 }
 
 
@@ -37,6 +39,7 @@ __all__ = [
     "EEGDataset",
     "BCIIV2aDataset",
     "BCIIV2bDataset",
+    "PhysioNetEEGBCIDataset",
     "DATASET_REGISTRY",
     "create_dataset",
 ]
