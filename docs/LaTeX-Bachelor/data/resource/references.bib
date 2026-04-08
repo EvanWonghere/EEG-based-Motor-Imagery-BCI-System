@@ -47,16 +47,7 @@
   doi     = {10.1016/S1388-2457(99)00141-8},
 }
 
-@article{neuper2001imagery,
-  title   = {Motor Imagery and Direct Brain--Computer Communication},
-  author  = {Neuper, Christa and M{\"u}ller, Gert R and K{\"u}bler, Andrea and Birbaumer, Niels and Pfurtscheller, Gert},
-  journal = {Proceedings of the IEEE},
-  volume  = {89},
-  number  = {7},
-  pages   = {1123--1134},
-  year    = {2001},
-  doi     = {10.1109/5.939829},
-}
+% neuper2001imagery merged into pfurtscheller2001graz (same paper, same DOI)
 
 % --- CSP 方法 ---
 
@@ -146,11 +137,11 @@
   year        = {2008},
 }
 
-@article{leeb2008bci2b,
-  title   = {{BCI Competition 2008 -- Graz Data Set B}},
-  author  = {Leeb, Robert and Brunner, Clemens and M{\"u}ller-Putz, Gernot R and Schl{\"o}gl, Alois and Pfurtscheller, Gert},
-  journal = {Graz University of Technology, Austria},
-  year    = {2008},
+@techreport{leeb2008bci2b,
+  title       = {{BCI Competition 2008 -- Graz Data Set B}},
+  author      = {Leeb, Robert and Brunner, Clemens and M{\"u}ller-Putz, Gernot R and Schl{\"o}gl, Alois and Pfurtscheller, Gert},
+  institution = {Institute for Knowledge Discovery, Graz University of Technology},
+  year        = {2008},
 }
 
 @article{schalk2004eegbci,
@@ -297,6 +288,69 @@
   doi     = {10.1088/1741-2552/ab0ab5},
 }
 
+% --- EEG 基础与教材 ---
+
+@book{niedermeyer2004eeg,
+  title     = {Electroencephalography: Basic Principles, Clinical Applications, and Related Fields},
+  author    = {Niedermeyer, Ernst and Lopes da Silva, Fernando H},
+  edition   = {5th},
+  year      = {2004},
+  publisher = {Lippincott Williams \& Wilkins},
+  address   = {Philadelphia},
+}
+
+@book{nunez2006eeg,
+  title     = {Electric Fields of the Brain: The Neurophysics of {EEG}},
+  author    = {Nunez, Paul L and Srinivasan, Ramesh},
+  year      = {2006},
+  publisher = {Oxford University Press},
+  edition   = {2nd},
+}
+
+@article{jasper195810-20,
+  title   = {The Ten-Twenty Electrode System of the International Federation},
+  author  = {Jasper, Herbert H},
+  journal = {Electroencephalography and Clinical Neurophysiology},
+  volume  = {10},
+  pages   = {371--375},
+  year    = {1958},
+}
+
+% --- 运动想象神经生理学 ---
+
+@article{pfurtscheller1997mu,
+  title   = {Motor Imagery Activates Primary Sensorimotor Area in Humans},
+  author  = {Pfurtscheller, Gert and Neuper, Christa},
+  journal = {Neuroscience Letters},
+  volume  = {239},
+  number  = {2--3},
+  pages   = {65--68},
+  year    = {1997},
+  doi     = {10.1016/S0304-3940(97)00889-6},
+}
+
+@article{jeannerod1995mental,
+  title   = {Mental Imagery in the Motor Context},
+  author  = {Jeannerod, Marc},
+  journal = {Neuropsychologia},
+  volume  = {33},
+  number  = {11},
+  pages   = {1419--1432},
+  year    = {1995},
+  doi     = {10.1016/0028-3932(95)00073-C},
+}
+
+@article{mcfarland2000mu,
+  title   = {Mu and Beta Rhythm Topographies During Motor Imagery and Actual Movements},
+  author  = {McFarland, Dennis J and Miner, Laurie A and Vaughan, Theresa M and Wolpaw, Jonathan R},
+  journal = {Brain Topography},
+  volume  = {12},
+  number  = {3},
+  pages   = {177--186},
+  year    = {2000},
+  doi     = {10.1023/A:1023437823106},
+}
+
 % --- ICA ---
 
 @article{jung2000ica,
@@ -308,4 +362,60 @@
   pages   = {163--178},
   year    = {2000},
   doi     = {10.1111/1469-8986.3720163},
+}
+
+@article{hyvarinen2000ica,
+  title   = {Independent Component Analysis: Algorithms and Applications},
+  author  = {Hyv{\"a}rinen, Aapo and Oja, Erkki},
+  journal = {Neural Networks},
+  volume  = {13},
+  number  = {4--5},
+  pages   = {411--430},
+  year    = {2000},
+  doi     = {10.1016/S0893-6080(00)00026-5},
+}
+
+% --- 预处理相关 ---
+
+@article{ludwig2009car,
+  title   = {Using a Common Average Reference to Improve Cortical Neuron Recordings from Microelectrode Arrays},
+  author  = {Ludwig, Kip A and Miriani, Rachel M and Langhals, Nicholas B and Joseph, Michael D and Anderson, David J and Kipke, Daryl R},
+  journal = {Journal of Neurophysiology},
+  volume  = {101},
+  number  = {3},
+  pages   = {1679--1689},
+  year    = {2009},
+  doi     = {10.1152/jn.90989.2008},
+}
+
+@book{oppenheim1999dsp,
+  title     = {Discrete-Time Signal Processing},
+  author    = {Oppenheim, Alan V and Schafer, Ronald W},
+  edition   = {2nd},
+  year      = {1999},
+  publisher = {Prentice Hall},
+  address   = {Upper Saddle River, NJ},
+}
+
+% --- BCI 范式 ---
+
+@article{pfurtscheller2001graz,
+  title   = {Motor Imagery and Direct Brain--Computer Communication},
+  author  = {Pfurtscheller, Gert and Neuper, Christa and Guger, Christoph and Harkam, Wolfgang and Ramoser, Herbert and Schl{\"o}gl, Alois and Obermaier, Bernhard and Pregenzer, Michael},
+  journal = {Proceedings of the IEEE},
+  volume  = {89},
+  number  = {7},
+  pages   = {1123--1134},
+  year    = {2001},
+  doi     = {10.1109/5.939829},
+}
+
+% --- WebSocket / 在线系统（供 Ch7 使用）---
+
+@misc{rfc6455websocket,
+  title        = {The {WebSocket} Protocol},
+  author       = {Fette, Ian and Melnikov, Alexey},
+  howpublished = {RFC 6455, IETF},
+  year         = {2011},
+  doi          = {10.17487/RFC6455},
 }
